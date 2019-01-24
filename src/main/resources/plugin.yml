@@ -1,0 +1,8 @@
+name: AfGLock
+version: 0.1
+author: halberfan | AfGMedia
+main: de.afgmedia.afglock2.main.AfGLock
+api-version: 1.13
+
+commands:
+    lock:
