@@ -3,6 +3,7 @@ package de.afgmedia.afglock2.main;
 import de.afgmedia.afglock2.commands.CMDlock;
 import de.afgmedia.afglock2.items.ItemStacks;
 import de.afgmedia.afglock2.listener.BlockBreakListener;
+import de.afgmedia.afglock2.listener.CraftingListener;
 import de.afgmedia.afglock2.listener.InteractListener;
 import de.afgmedia.afglock2.listener.InventoryClickListener;
 import de.afgmedia.afglock2.locks.manager.ProtectionManager;
@@ -12,6 +13,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.WorldCreator;
 import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
@@ -20,6 +22,8 @@ public class AfGLock extends JavaPlugin implements Listener {
 
     private ProtectionManager protectionManager;
     private AfGFileManager fileManager;
+
+    private ItemStacks itemStacks;
 
     @Override
     public void onEnable()
@@ -40,7 +44,8 @@ public class AfGLock extends JavaPlugin implements Listener {
         new InteractListener(this);
         new InventoryClickListener(this);
         new BlockBreakListener(this);
-        new ItemStacks(this);
+        new CraftingListener(this);
+        itemStacks = new ItemStacks(this);
         new CMDlock(this);
         fileManager = new AfGFileManager(this);
         fileManager.loadGroups();
@@ -53,4 +58,7 @@ public class AfGLock extends JavaPlugin implements Listener {
         return protectionManager;
     }
 
+    public ItemStacks getItemStacks() {
+        return itemStacks;
+    }
 }

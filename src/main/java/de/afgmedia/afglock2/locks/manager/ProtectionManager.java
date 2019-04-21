@@ -8,9 +8,7 @@ import de.afgmedia.afglock2.locks.settings.*;
 import de.afgmedia.afglock2.main.AfGLock;
 import de.afgmedia.afglock2.utils.Utils;
 import de.afgmedia.afglock2.utils.Values;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -34,13 +32,11 @@ public class ProtectionManager {
     private HashMap<String, LockGroup> lockGroups = new HashMap<>();
     private HashMap<Player, Lockpick> lockPicking = new HashMap<>();
 
-    public ProtectionManager(AfGLock instance)
-    {
+    public ProtectionManager(AfGLock instance) {
         this.instance = instance;
     }
 
-    public ReturnType createLock(Block block, Player player, int protectionTier)
-    {
+    public ReturnType createLock(Block block, Player player, int protectionTier) {
 
         Material material = block.getType();
         Location location = block.getLocation();
@@ -53,8 +49,7 @@ public class ProtectionManager {
             if (Utils.isDoubleChest(block))
                 type = ProtectionType.DOUBLE_CHEST;
             else type = ProtectionType.CHEST;
-        }
-        else if (Utils.isDoor(material))
+        } else if (Utils.isDoor(material))
             type = ProtectionType.DOOR;
         else if (Utils.isTrapDoor(material))
             type = ProtectionType.TRAP_DOOR;
@@ -62,8 +57,7 @@ public class ProtectionManager {
 
         if (type == ProtectionType.DOUBLE_CHEST) {
             location = Utils.getLeftLocationOfDoubleChest(block);
-        }
-        else if (type == ProtectionType.DOOR) {
+        } else if (type == ProtectionType.DOOR) {
             location = Utils.getLowerLocationOfDoor(block);
         }
 
@@ -76,17 +70,13 @@ public class ProtectionManager {
 
         if (type == ProtectionType.DOOR) {
             protection = new DoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-        }
-        else if (type == ProtectionType.CHEST) {
+        } else if (type == ProtectionType.CHEST) {
             protection = new ChestProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-        }
-        else if (type == ProtectionType.DOUBLE_CHEST) {
+        } else if (type == ProtectionType.DOUBLE_CHEST) {
             protection = new DoubleChestProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-        }
-        else if (type == ProtectionType.TRAP_DOOR) {
+        } else if (type == ProtectionType.TRAP_DOOR) {
             protection = new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-        }
-        else return ReturnType.FAIL;
+        } else return ReturnType.FAIL;
 
         protections.put(location, protection);
 
@@ -95,15 +85,13 @@ public class ProtectionManager {
         return ReturnType.DONE;
     }
 
-    public Protection getByBlock(Block block)
-    {
+    public Protection getByBlock(Block block) {
 
         Location location = block.getLocation();
 
         if (Utils.isDoubleChest(block)) {
             location = Utils.getLeftLocationOfDoubleChest(block);
-        }
-        else if (Utils.isDoor(block.getType())) {
+        } else if (Utils.isDoor(block.getType())) {
             location = Utils.getLowerLocationOfDoor(block);
         }
 
@@ -112,10 +100,11 @@ public class ProtectionManager {
         return protection;
     }
 
-    public void handleInteractEvent(PlayerInteractEvent event)
-    {
+    public void handleInteractEvent(PlayerInteractEvent event) {
         Player p = event.getPlayer();
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {return;}
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
         Block block = event.getClickedBlock();
         ItemStack inHand = p.getInventory().getItemInMainHand();
         if (!ChestShop.canAccess(p, block)) {
@@ -150,8 +139,7 @@ public class ProtectionManager {
                         p.sendMessage("§c- " + Bukkit.getOfflinePlayer(UUID.fromString(setting.getUuid())).getName());
                 }
 
-            }
-            else if (ps instanceof AllowSetting) {
+            } else if (ps instanceof AllowSetting) {
 
                 Protection protection = getByBlock(block);
                 if (protection == null) {
@@ -173,8 +161,7 @@ public class ProtectionManager {
                     protection.addAllowSetting(allowSetting);
                     p.sendMessage("§cDu hast den Spieler " + Bukkit.getOfflinePlayer(UUID.fromString(allowSetting.getUuid())).getName() + " hinzugefügt");
 
-                }
-                else if (allowSetting.getType() == AllowSetting.AllowSettingType.GROUP) {
+                } else if (allowSetting.getType() == AllowSetting.AllowSettingType.GROUP) {
 
                     protection.addAllowSetting(allowSetting);
                     p.sendMessage("§cDu hast die Gruppe " + allowSetting.getGroup() + " hinzugefügt");
@@ -182,8 +169,7 @@ public class ProtectionManager {
                 }
 
 
-            }
-            else if (ps instanceof DenySetting) {
+            } else if (ps instanceof DenySetting) {
 
                 Protection protection = getByBlock(block);
                 if (protection == null) {
@@ -203,8 +189,7 @@ public class ProtectionManager {
                 protection.removeAllowSetting(denySetting);
 
 
-            }
-            else if (ps instanceof RemoveSetting) {
+            } else if (ps instanceof RemoveSetting) {
 
                 Protection protection = getByBlock(block);
                 if (protection == null) {
@@ -214,7 +199,7 @@ public class ProtectionManager {
                 }
 
                 if (!protection.getOwner().toString().equalsIgnoreCase(p.getUniqueId().toString())) {
-                    if(p.hasPermission("afglock.admin")) {
+                    if (p.hasPermission("afglock.admin")) {
                         removeLock(protection);
                         p.sendMessage("§cDu hast die Sicherung mit deinen Rechten entfernt");
                         return;
@@ -255,14 +240,11 @@ public class ProtectionManager {
                         int tier;
                         if (displayName.equalsIgnoreCase(Values.SCHLOSS_IRON_NAME)) {
                             tier = 1;
-                        }
-                        else if (displayName.equalsIgnoreCase(Values.SCHLOSS_DIAMOND_NAME)) {
+                        } else if (displayName.equalsIgnoreCase(Values.SCHLOSS_DIAMOND_NAME)) {
                             tier = 2;
-                        }
-                        else if (displayName.equalsIgnoreCase(Values.SCHLOSS_EMERALD_NAME)) {
+                        } else if (displayName.equalsIgnoreCase(Values.SCHLOSS_EMERALD_NAME)) {
                             tier = 3;
-                        }
-                        else {
+                        } else {
                             return;
                         }
 
@@ -294,12 +276,12 @@ public class ProtectionManager {
                 ItemMeta itemMeta = itemStack.getItemMeta();
                 if (itemMeta != null) {
                     if (itemMeta.getDisplayName().equalsIgnoreCase("§5Dietrich")) {
-                        p.sendMessage("§cDiese Funktion ist noch nicht freigeschaltet weil es noch verbuggt ist!");
-                        return;
-                        /*
+                        //p.sendMessage("§cDiese Funktion ist noch nicht freigeschaltet weil es noch verbuggt ist!");
+                        //return;
+
                         startLockPicking(protection, p);
                         return;
-                        */
+
                     }
                 }
             }
@@ -309,49 +291,88 @@ public class ProtectionManager {
 
     }
 
-    private void startLockPicking(Protection check, Player p)
-    {
-        Lockpick lockpick = new Lockpick(check, p, instance);
+    private void startLockPicking(Protection check, Player p) {
+        int tier = check.getProtectionTier();
+
+        double d = Math.random();
+
+        if (tier == 1) {
+
+            if (d <= 0.25) {
+                sucess(p, check);
+            } else fail(p);
+
+        } else if (tier == 2) {
+
+            if (d <= 0.125) {
+                sucess(p, check);
+            } else fail(p);
+
+        } else if (tier == 3) {
+            if (d <= 0.0625)
+                sucess(p, check);
+            else fail(p);
+        }
+
+        /*
         lockPicking.put(p, lockpick);
         lockpick.openInventory(p);
+        */
     }
 
-    public void lockPick(InventoryClickEvent event)
-    {
+    private void sucess(Player p, Protection protection) {
+        instance.getProtectionManager().removeLock(protection);
+        Bukkit.getScheduler().runTaskLater(instance, () -> {
+            p.closeInventory();
+            p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount() - 1);
+        }, 2);
+        p.sendMessage("§cDu hast es geschafft! Die Sicherung ist in seine Einzelteile zersprungen.");
+        p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 100, 50);
+        OfflinePlayer op = Bukkit.getOfflinePlayer(protection.getOwner());
+        if (op.isOnline())
+            op.getPlayer().sendMessage("§c" + "Ein Sloss von dir wurde geknackt! (" + protection.getLocation().getX() + " " + protection.getLocation().getY() + " " + protection.getLocation().getZ() + ")");
+        else
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "mail " + op.getName() + " Ein Sloss von dir wurde geknackt! (" + protection.getLocation().getX() + " " + protection.getLocation().getY() + " " + protection.getLocation().getZ() + ")");
+
+    }
+
+    private void fail(Player p) {
+        Bukkit.getScheduler().runTaskLater(instance, () -> {
+            p.closeInventory();
+            p.sendMessage("§cDein Dietrich ist abgebrochen!");
+            p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount() - 1);
+            p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_LAND, 100, 30);
+        }, 2);
+    }
+
+    public void lockPick(InventoryClickEvent event) {
         Player p = (Player) event.getWhoClicked();
         lockPicking.get(p).lockPick(event);
     }
 
-    public HashMap<String, LockGroup> getLockGroups()
-    {
+    public HashMap<String, LockGroup> getLockGroups() {
         return lockGroups;
     }
 
-    public void lockPickFail(Player player)
-    {
+    public void lockPickFail(Player player) {
         lockPicking.remove(player);
     }
 
-    public void removeLock(Protection protection)
-    {
+    public void removeLock(Protection protection) {
         protections.remove(protection.getLocation());
     }
 
-    public void addLock(Location loc, UUID owner, ProtectionType type, int protectionTier, List<AllowSetting> allowSettings, int id)
-    {
+    public void addLock(Location loc, UUID owner, ProtectionType type, int protectionTier, List<AllowSetting> allowSettings, int id) {
 
         Protection protection = null;
 
         if (type == ProtectionType.CHEST) {
             protection = new ChestProtection(instance, owner, id, loc, protectionTier);
-        }
-        else if (type == ProtectionType.DOUBLE_CHEST) {
+        } else if (type == ProtectionType.DOUBLE_CHEST) {
             protection = new DoubleChestProtection(instance, owner, id, loc, protectionTier);
-        }
-        else if (type == ProtectionType.TRAP_DOOR) {
+        } else if (type == ProtectionType.TRAP_DOOR) {
             protection = new TrapDoorProtection(instance, owner, id, loc, protectionTier);
-        }
-        else if (type == ProtectionType.DOOR) {
+        } else if (type == ProtectionType.DOOR) {
             protection = new DoorProtection(instance, owner, id, loc, protectionTier);
         }
 
@@ -372,8 +393,7 @@ public class ProtectionManager {
 
     }
 
-    public void latestIDPlus()
-    {
+    public void latestIDPlus() {
         latestID++;
     }
 
@@ -381,18 +401,15 @@ public class ProtectionManager {
         DONE, NOT_LOCKABLE, ALREADY_LOCKED, FAIL
     }
 
-    public void setProtectionSetting(Player player, ProtectionSetting protectionSetting)
-    {
+    public void setProtectionSetting(Player player, ProtectionSetting protectionSetting) {
         playerSetting.put(player, protectionSetting);
     }
 
-    public boolean isInSetting(Player player)
-    {
+    public boolean isInSetting(Player player) {
         return playerSetting.containsKey(player);
     }
 
-    public HashMap<Location, Protection> getProtections()
-    {
+    public HashMap<Location, Protection> getProtections() {
         return protections;
     }
 }

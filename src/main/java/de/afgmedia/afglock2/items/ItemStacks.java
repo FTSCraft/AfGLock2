@@ -103,4 +103,8 @@ public class ItemStacks {
     {
         return schloss_iron.clone();
     }
+
+    public ItemStack getDietrich() {
+        return dietrich;
+    }
 }
