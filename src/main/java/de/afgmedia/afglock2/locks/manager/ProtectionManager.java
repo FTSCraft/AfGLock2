@@ -53,6 +53,8 @@ public class ProtectionManager {
             type = ProtectionType.DOOR;
         else if (Utils.isTrapDoor(material))
             type = ProtectionType.TRAP_DOOR;
+        else if(Utils.isFenceGate(material))
+            type = ProtectionType.GATE;
         else return ReturnType.FAIL;
 
         if (type == ProtectionType.DOUBLE_CHEST) {
@@ -75,6 +77,8 @@ public class ProtectionManager {
         } else if (type == ProtectionType.DOUBLE_CHEST) {
             protection = new DoubleChestProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
         } else if (type == ProtectionType.TRAP_DOOR) {
+            protection = new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+        } else if(type == ProtectionType.GATE) {
             protection = new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
         } else return ReturnType.FAIL;
 

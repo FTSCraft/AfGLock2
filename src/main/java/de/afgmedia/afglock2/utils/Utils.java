@@ -85,8 +85,13 @@ public class Utils {
     public static boolean isLockable(Material material)
     {
 
-        return material == Material.CHEST || isDoor(material) || isTrapDoor(material) || material == Material.TRAPPED_CHEST;
+        return material == Material.CHEST || isDoor(material) || isTrapDoor(material) || material == Material.TRAPPED_CHEST || isFenceGate(material);
 
+    }
+
+    public static boolean isFenceGate(Material mat) {
+        return mat == Material.ACACIA_FENCE_GATE || mat == Material.BIRCH_FENCE_GATE || mat == Material.DARK_OAK_FENCE_GATE || mat == Material.JUNGLE_FENCE_GATE
+                || mat == Material.OAK_FENCE_GATE || mat == Material.SPRUCE_FENCE_GATE;
     }
 
     public static boolean isTrapDoor(Material material)
