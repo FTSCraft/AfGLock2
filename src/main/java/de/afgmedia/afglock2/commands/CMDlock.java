@@ -51,7 +51,7 @@ public class CMDlock implements CommandExecutor {
             } else if(args[0].equalsIgnoreCase("delete")) {
                 RemoveSetting setting = new RemoveSetting(p);
                 plugin.getProtectionManager().setProtectionSetting(p, setting);
-                p.sendMessage("§cBitte click jetzt auf eine Sicherung");
+                p.sendMessage("§cBitte klick jetzt auf eine Sicherung");
                 return true;
             }
             else p.sendMessage(help());
@@ -227,13 +227,14 @@ public class CMDlock implements CommandExecutor {
         return "§b=====§c/lock§b=====\n" +
                 "§e/lock info §cZeigt Informationen zu der Sicherung an\n" +
                 "§e/lock delete §cLösche eine Sicherung\n"+
-                "§e/lock add <Gruppe/Spieler> §cFügt einen Spieler oder Gruppe hinzu\n" +
-                "§e/lock remove <Gruppe/Spieler> §cEntfernt einen Spieler oder Gruppe\n" +
+                "§e/lock add <$Gruppe/Spieler> §cFügt einen Spieler oder Gruppe hinzu\n" +
+                "§e/lock remove <$Gruppe/Spieler> §cEntfernt einen Spieler oder Gruppe\n" +
                 "§e/lock group create <Name> §cErstellt eine Gruppe\n" +
                 "§e/lock group add <Spieler> <Gruppe> §cFügt einen Spieler zur Gruppe hinzu\n" +
                 "§e/lock group remove <Spieler> <Gruppe> §cEntfernt einen Spieler von einer Gruppe\n" +
                 "§e/lock group info <Gruppe> §cZeigt Informationen zur Gruppe\n" +
-                "§eDu weißt null worum es hier geht? Hier findest du mehr Informationen: LINK";
+                "§eMit dem '$' - Zeichen zeigst, du dass es sich bei dem Command um eine Gruppe handlet" +
+                "§eDu weißt null worum es hier geht? Hier findest du mehr Informationen: https://bit.ly/2MmNeK1";
 
     }
 

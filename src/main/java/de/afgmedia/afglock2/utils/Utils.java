@@ -8,7 +8,6 @@ import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.material.Door;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Openable;
-import sun.awt.SunHints;
 
 import java.util.Random;
 import java.util.UUID;
@@ -85,7 +84,7 @@ public class Utils {
     public static boolean isLockable(Material material)
     {
 
-        return material == Material.CHEST || isDoor(material) || isTrapDoor(material) || material == Material.TRAPPED_CHEST || isFenceGate(material);
+        return material == Material.CHEST || isDoor(material) || isTrapDoor(material) || material == Material.TRAPPED_CHEST || isFenceGate(material) || isBarrel(material);
 
     }
 
@@ -114,4 +113,7 @@ public class Utils {
         return Bukkit.getOfflinePlayer(name).getUniqueId();
     }
 
+    public static boolean isBarrel(Material material) {
+        return material == Material.BARREL;
+    }
 }

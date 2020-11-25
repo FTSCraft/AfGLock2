@@ -27,7 +27,7 @@ public class InventoryClickListener implements Listener {
         Player p = (Player) event.getWhoClicked();
         Inventory inventory = event.getInventory();
 
-        if (inventory.getName().equalsIgnoreCase(Values.DIETRICH_INVENTORY_NAME)) {
+        if (event.getView().getTitle().equalsIgnoreCase(Values.DIETRICH_INVENTORY_NAME)) {
             plugin.getProtectionManager().lockPick(event);
         }
 

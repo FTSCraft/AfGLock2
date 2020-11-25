@@ -86,6 +86,10 @@ public class AfGFileManager {
 
     public void saveLocks() {
 
+        for(File file : Objects.requireNonNull(lockFolder.listFiles())) {
+            file.delete();
+        }
+
         for (Protection protection : instance.getProtectionManager().getProtections().values()) {
 
             try {

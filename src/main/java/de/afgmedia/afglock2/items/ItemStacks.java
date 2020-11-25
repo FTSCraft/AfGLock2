@@ -77,10 +77,11 @@ public class ItemStacks {
         NamespacedKey dietrichK = new NamespacedKey(instance, "AFGLOCK-DIETRICH");
         ShapedRecipe dietrichR = new ShapedRecipe(dietrichK, dietrich);
 
-        dietrichR.shape("EIE","IBI","EIE");
+        dietrichR.shape("EIE","IBI","DID");
         dietrichR.setIngredient('E', Material.EMERALD);
         dietrichR.setIngredient('I', Material.IRON_INGOT);
-        dietrichR.setIngredient('B', Material.BLAZE_ROD);
+        dietrichR.setIngredient('B', Material.STICK);
+        dietrichR.setIngredient('D', Material.DIAMOND);
 
         instance.getServer().addRecipe(ironR);
         instance.getServer().addRecipe(diamondR);

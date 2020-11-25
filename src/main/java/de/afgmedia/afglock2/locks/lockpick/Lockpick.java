@@ -1,6 +1,5 @@
 package de.afgmedia.afglock2.locks.lockpick;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import de.afgmedia.afglock2.listener.InventoryClickListener;
 import de.afgmedia.afglock2.locks.Protection;
 import de.afgmedia.afglock2.main.AfGLock;

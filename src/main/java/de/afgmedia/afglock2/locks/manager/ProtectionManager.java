@@ -12,6 +12,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -53,8 +54,10 @@ public class ProtectionManager {
             type = ProtectionType.DOOR;
         else if (Utils.isTrapDoor(material))
             type = ProtectionType.TRAP_DOOR;
-        else if(Utils.isFenceGate(material))
+        else if (Utils.isFenceGate(material))
             type = ProtectionType.GATE;
+        else if (Utils.isBarrel(material))
+            type = ProtectionType.BARREL;
         else return ReturnType.FAIL;
 
         if (type == ProtectionType.DOUBLE_CHEST) {
@@ -78,8 +81,10 @@ public class ProtectionManager {
             protection = new DoubleChestProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
         } else if (type == ProtectionType.TRAP_DOOR) {
             protection = new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-        } else if(type == ProtectionType.GATE) {
+        } else if (type == ProtectionType.GATE) {
             protection = new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+        } else if (type == ProtectionType.BARREL) {
+            protection = new BarrelProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
         } else return ReturnType.FAIL;
 
         protections.put(location, protection);
@@ -205,6 +210,7 @@ public class ProtectionManager {
                 if (!protection.getOwner().toString().equalsIgnoreCase(p.getUniqueId().toString())) {
                     if (p.hasPermission("afglock.admin")) {
                         removeLock(protection);
+                        playerSetting.remove(p);
                         p.sendMessage("§cDu hast die Sicherung mit deinen Rechten entfernt");
                         return;
                     }
@@ -378,6 +384,8 @@ public class ProtectionManager {
             protection = new TrapDoorProtection(instance, owner, id, loc, protectionTier);
         } else if (type == ProtectionType.DOOR) {
             protection = new DoorProtection(instance, owner, id, loc, protectionTier);
+        } else if(type == ProtectionType.BARREL) {
+            protection = new BarrelProtection(instance, owner, id, loc, protectionTier);
         }
 
         if (protection == null) {
@@ -395,6 +403,10 @@ public class ProtectionManager {
 
         protections.put(loc, protection);
 
+    }
+
+    public boolean isLocked(Block block) {
+        return getByBlock(block) != null;
     }
 
     public void latestIDPlus() {

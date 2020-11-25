@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityBreakDoorEvent;
 
 public class BlockBreakListener implements Listener {
 
@@ -17,6 +18,21 @@ public class BlockBreakListener implements Listener {
     {
         this.instance = instance;
         instance.getServer().getPluginManager().registerEvents(this, instance);
+    }
+
+    @EventHandler
+    public void onZombie(EntityBreakDoorEvent event) {
+
+        System.out.println("Ein Zombie hat versucht eine Tür zu knacken!");
+        Block block = event.getBlock();
+        Protection protection = instance.getProtectionManager().getByBlock(block);
+
+        if(protection == null) {
+            return;
+        }
+
+        event.setCancelled(true);
+
     }
 
     @EventHandler()
