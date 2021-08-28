@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
 
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 
 public class BlockBreakListener implements Listener {
 
-    private AfGLock instance;
+    private final AfGLock instance;
 
     public BlockBreakListener(AfGLock instance)
     {
@@ -78,7 +77,7 @@ public class BlockBreakListener implements Listener {
 
     }
 
-    ArrayList<OfflinePlayer> receivedMessage = new ArrayList<>();
+    final ArrayList<OfflinePlayer> receivedMessage = new ArrayList<>();
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {

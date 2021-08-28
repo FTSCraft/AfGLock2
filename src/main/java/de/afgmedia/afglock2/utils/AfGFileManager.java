@@ -19,9 +19,9 @@ import java.util.UUID;
 
 public class AfGFileManager {
 
-    private File lockFolder;
-    private File groupFolder;
-    private AfGLock instance;
+    private final File lockFolder;
+    private final File groupFolder;
+    private final AfGLock instance;
 
     public AfGFileManager(AfGLock instance)
     {

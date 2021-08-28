@@ -10,11 +10,11 @@ import java.util.UUID;
 
 public class BarrelProtection extends Protection {
 
-    private int protectionTier;
-    private int id;
-    private UUID owner;
-    private List<AllowSetting> allowSettings;
-    private Location location;
+    private final int protectionTier;
+    private final int id;
+    private final UUID owner;
+    private final List<AllowSetting> allowSettings;
+    private final Location location;
 
     public BarrelProtection(AfGLock instance, UUID owner, int id, Location location, int tier) {
         super(instance);

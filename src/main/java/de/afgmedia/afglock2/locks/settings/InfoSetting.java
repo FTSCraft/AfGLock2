@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 public class InfoSetting implements ProtectionSetting {
 
-    private Player p;
+    private final Player p;
 
 
     public InfoSetting(Player p)

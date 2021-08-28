@@ -2,6 +2,7 @@ package de.afgmedia.afglock2.items;
 
 import de.afgmedia.afglock2.main.AfGLock;
 import de.afgmedia.afglock2.utils.Values;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -10,9 +11,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class ItemStacks {
 
-    private ItemStack schloss_iron, schloss_diamond, schloss_emerald, schloss_stein, dietrich;
+    private final ItemStack schloss_iron;
+    private final ItemStack schloss_diamond;
+    private final ItemStack schloss_emerald;
+    private final ItemStack schloss_stein;
+    private final ItemStack dietrich;
 
-    private AfGLock instance;
+    private final AfGLock instance;
 
     public ItemStacks(AfGLock plugin)
     {

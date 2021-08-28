@@ -1,6 +1,5 @@
 package de.afgmedia.afglock2.locks.lockpick;
 
-import de.afgmedia.afglock2.listener.InventoryClickListener;
 import de.afgmedia.afglock2.locks.Protection;
 import de.afgmedia.afglock2.main.AfGLock;
 import de.afgmedia.afglock2.utils.Utils;
@@ -9,10 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -23,16 +20,16 @@ import java.util.List;
 
 public class Lockpick {
 
-    private Protection protection;
-    private Player player;
-    private int protectionTier;
-    private int kolben;
-    private List<Integer> solution;
+    private final Protection protection;
+    private final Player player;
+    private final int protectionTier;
+    private final int kolben;
+    private final List<Integer> solution;
     private int lastKolben = 0;
 
-    private Inventory inventory;
-    private int progress = 0;
-    private AfGLock plugin;
+    private final Inventory inventory;
+    private final int progress = 0;
+    private final AfGLock plugin;
     private boolean wait = false;
 
     public Lockpick(Protection protection, Player player, AfGLock plugin)
@@ -85,10 +82,9 @@ public class Lockpick {
                 inventory.setItem(i, filler);
         }
 
-        int kolben[] = {9, 10, 11, 12, 13};
+        int[] kolben = {9, 10, 11, 12, 13};
 
-        for (int i = 0; i < kolben.length; i++) {
-            int k = kolben[i];
+        for (int k : kolben) {
             if (inventory.getItem(k).equals(piston)) {
                 try {
                     inventory.setItem(k + 9, new ItemStack(Material.AIR));
@@ -139,9 +135,7 @@ public class Lockpick {
 
             if (slot == currentUpperSlot) {
                 wait = true;
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    wait = false;
-                }, 20);
+                Bukkit.getScheduler().runTaskLater(plugin, () -> wait = false, 20);
                 if (solution.get(lastKolben) != 1) {
                     fail(event);
                     return;
@@ -150,9 +144,7 @@ public class Lockpick {
             }
             else if (slot == currentLowerSlot) {
                 wait = true;
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    wait = false;
-                }, 20);
+                Bukkit.getScheduler().runTaskLater(plugin, () -> wait = false, 20);
                 if (solution.get(lastKolben) != 2) {
                     fail(event);
                     return;
@@ -178,7 +170,6 @@ public class Lockpick {
         }
         else {
             event.setCancelled(true);
-            return;
         }
 
     }

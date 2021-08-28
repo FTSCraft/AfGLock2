@@ -10,11 +10,11 @@ import java.util.UUID;
 
 public class ChestProtection extends Protection {
 
-    private int id;
-    private UUID owner;
-    private Location location;
-    private int protectionTier;
-    private List<AllowSetting> allowSettings;
+    private final int id;
+    private final UUID owner;
+    private final Location location;
+    private final int protectionTier;
+    private final List<AllowSetting> allowSettings;
 
     public ChestProtection(AfGLock instance, UUID owner, int id, Location location, int tier)
     {

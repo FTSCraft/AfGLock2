@@ -15,8 +15,8 @@ import java.util.List;
 
 public class TabLock implements TabCompleter {
 
-    List<String> arguments = new ArrayList<String>();
-    List<String> argumentsGroups = new ArrayList<String>();
+    final List<String> arguments = new ArrayList<>();
+    final List<String> argumentsGroups = new ArrayList<>();
 
     public TabLock(AfGLock plugin) {
         plugin.getCommand("lock").setTabCompleter(this);
@@ -27,7 +27,7 @@ public class TabLock implements TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         if (args[0].equalsIgnoreCase("group") && args.length == 2) {
             for (String a : argumentsGroups) {
@@ -39,9 +39,9 @@ public class TabLock implements TabCompleter {
 
         if (args.length == 1) {
 
-            for (int i = 0; i < arguments.size(); i++) {
-                if (arguments.get(i).toLowerCase().startsWith(args[0].toLowerCase()))
-                    result.add(arguments.get(i));
+            for (String argument : arguments) {
+                if (argument.toLowerCase().startsWith(args[0].toLowerCase()))
+                    result.add(argument);
             }
             return result;
 

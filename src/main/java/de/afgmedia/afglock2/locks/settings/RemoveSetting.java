@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 public class RemoveSetting implements ProtectionSetting {
 
-    private Player player;
+    private final Player player;
 
     public RemoveSetting(Player player)
     {

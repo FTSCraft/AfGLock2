@@ -7,8 +7,6 @@ import org.bukkit.block.*;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.block.data.type.Door;
-import org.bukkit.material.MaterialData;
-import org.bukkit.material.Openable;
 
 import java.util.Random;
 import java.util.UUID;

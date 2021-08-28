@@ -12,9 +12,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -26,12 +24,12 @@ import java.util.logging.Level;
 
 public class ProtectionManager {
 
-    private AfGLock instance;
+    private final AfGLock instance;
     private int latestID = 0;
-    private HashMap<Location, Protection> protections = new HashMap<>();
-    private HashMap<Player, ProtectionSetting> playerSetting = new HashMap<>();
-    private HashMap<String, LockGroup> lockGroups = new HashMap<>();
-    private HashMap<Player, Lockpick> lockPicking = new HashMap<>();
+    private final HashMap<Location, Protection> protections = new HashMap<>();
+    private final HashMap<Player, ProtectionSetting> playerSetting = new HashMap<>();
+    private final HashMap<String, LockGroup> lockGroups = new HashMap<>();
+    private final HashMap<Player, Lockpick> lockPicking = new HashMap<>();
 
     public ProtectionManager(AfGLock instance) {
         this.instance = instance;
@@ -104,9 +102,7 @@ public class ProtectionManager {
             location = Utils.getLowerLocationOfDoor(block);
         }
 
-        Protection protection = protections.get(location);
-
-        return protection;
+        return protections.get(location);
     }
 
     public void handleInteractEvent(PlayerInteractEvent event) {

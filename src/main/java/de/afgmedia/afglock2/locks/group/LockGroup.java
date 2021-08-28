@@ -6,9 +6,9 @@ import java.util.UUID;
 
 public class LockGroup {
 
-    private String name;
-    private List<String> members;
-    private UUID owner;
+    private final String name;
+    private final List<String> members;
+    private final UUID owner;
 
     public LockGroup(String name, UUID owner)
     {

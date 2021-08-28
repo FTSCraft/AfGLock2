@@ -4,7 +4,7 @@ import de.afgmedia.afglock2.locks.settings.ProtectionSetting;
 
 public class AllowSetting implements ProtectionSetting {
 
-    private AllowSettingType type;
+    private final AllowSettingType type;
     private String group;
     private String uuid;
 

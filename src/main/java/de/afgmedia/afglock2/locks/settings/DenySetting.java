@@ -2,7 +2,7 @@ package de.afgmedia.afglock2.locks.settings;
 
 public class DenySetting implements ProtectionSetting {
 
-    private AllowSetting.AllowSettingType type;
+    private final AllowSetting.AllowSettingType type;
     private String group;
     private String uuid;
 

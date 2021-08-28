@@ -23,7 +23,7 @@ public abstract class Protection {
 
     abstract public int getProtectionTier();
 
-    private AfGLock instance;
+    private final AfGLock instance;
 
     public Protection(AfGLock instance)
     {
@@ -92,8 +92,4 @@ public abstract class Protection {
 
     }
 
-    public void remove()
-    {
-
-    }
 }

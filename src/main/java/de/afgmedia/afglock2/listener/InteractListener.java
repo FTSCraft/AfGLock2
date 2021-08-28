@@ -4,13 +4,10 @@ import de.afgmedia.afglock2.main.AfGLock;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.block.Container;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.block.data.Openable;
-import org.bukkit.block.data.type.Door;
 import org.bukkit.block.data.type.Gate;
-import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +18,7 @@ import org.bukkit.inventory.InventoryHolder;
 
 public class InteractListener implements Listener {
 
-    private AfGLock plugin;
+    private final AfGLock plugin;
 
     public InteractListener(AfGLock plugin) {
         this.plugin = plugin;
@@ -74,10 +71,6 @@ public class InteractListener implements Listener {
         }
 
 
-    }
-
-    private void print(String msg) {
-        Bukkit.broadcastMessage(msg);
     }
 
 }

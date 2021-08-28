@@ -5,11 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class CraftingListener implements Listener {
 
-    private AfGLock instance;
+    private final AfGLock instance;
 
     public CraftingListener(AfGLock instance) {
         this.instance = instance;
