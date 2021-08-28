@@ -6,6 +6,7 @@ import de.afgmedia.afglock2.locks.settings.DenySetting;
 import de.afgmedia.afglock2.locks.settings.InfoSetting;
 import de.afgmedia.afglock2.locks.settings.RemoveSetting;
 import de.afgmedia.afglock2.main.AfGLock;
+import de.afgmedia.afglock2.utils.Values;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -47,11 +48,11 @@ public class CMDlock implements CommandExecutor {
 
                 InfoSetting setting = new InfoSetting(p);
                 plugin.getProtectionManager().setProtectionSetting(p, setting);
-                p.sendMessage("§cBitte klick jetzt auf eine Sicherung");
+                p.sendMessage(Values.PREFIX + "Bitte klick jetzt auf eine Sicherung");
             } else if(args[0].equalsIgnoreCase("delete")) {
                 RemoveSetting setting = new RemoveSetting(p);
                 plugin.getProtectionManager().setProtectionSetting(p, setting);
-                p.sendMessage("§cBitte klick jetzt auf eine Sicherung");
+                p.sendMessage(Values.PREFIX + "Bitte klick jetzt auf eine Sicherung");
                 return true;
             }
             else p.sendMessage(help());
@@ -68,29 +69,29 @@ public class CMDlock implements CommandExecutor {
                     LockGroup group = plugin.getProtectionManager().getLockGroups().get(name);
 
                     if(group == null) {
-                        p.sendMessage("§cDiese Gruppe gibt es nicht!");
+                        p.sendMessage(Values.PREFIX + "Diese Gruppe gibt es nicht!");
                         return true;
                     }
 
                     if(!group.isMember(p.getUniqueId())) {
-                        p.sendMessage("§cDu gehörst gar nicht zu der Gruppe, naja, ist ja deine Sache!");
+                        p.sendMessage(Values.PREFIX + "Du gehörst gar nicht zu der Gruppe, naja, ist ja deine Sache!");
                     }
 
                     AllowSetting allowSetting = new AllowSetting(AllowSetting.AllowSettingType.GROUP);
                     allowSetting.setGroup(name);
-                    p.sendMessage("§cKlick jetzt auf eine Sicherung!");
+                    p.sendMessage(Values.PREFIX + "Klick jetzt auf eine Sicherung!");
                     plugin.getProtectionManager().setProtectionSetting(p, allowSetting);
 
                 } else {
 
                     OfflinePlayer op = Bukkit.getOfflinePlayer(name);
                     if(op.getFirstPlayed() == 0) {
-                        p.sendMessage("§cDieser Spieler hat hier noch nie gespielt, naja, ist ja deine Sache!");
+                        p.sendMessage(Values.PREFIX + "Dieser Spieler hat hier noch nie gespielt, naja, ist ja deine Sache!");
                     }
 
                     AllowSetting allowSetting = new AllowSetting(AllowSetting.AllowSettingType.PLAYER);
                     allowSetting.setUuid(op.getUniqueId().toString());
-                    p.sendMessage("§cKlick jetzt auf eine Sicherung!");
+                    p.sendMessage(Values.PREFIX + "Klick jetzt auf eine Sicherung!");
                     plugin.getProtectionManager().setProtectionSetting(p, allowSetting);
 
                 }
@@ -105,13 +106,13 @@ public class CMDlock implements CommandExecutor {
                     LockGroup group = plugin.getProtectionManager().getLockGroups().get(name);
 
                     if(group == null) {
-                        p.sendMessage("§cDiese Gruppe gibt es nicht!");
+                        p.sendMessage(Values.PREFIX + "Diese Gruppe gibt es nicht!");
                         return true;
                     }
 
                     DenySetting denySetting = new DenySetting(AllowSetting.AllowSettingType.GROUP);
                     denySetting.setGroup(name);
-                    p.sendMessage("§cKlick jetzt auf eine Sicherung!");
+                    p.sendMessage(Values.PREFIX + "Klick jetzt auf eine Sicherung!");
                     plugin.getProtectionManager().setProtectionSetting(p, denySetting);
 
                 } else {
@@ -120,7 +121,7 @@ public class CMDlock implements CommandExecutor {
 
                     DenySetting denySetting = new DenySetting(AllowSetting.AllowSettingType.PLAYER);
                     denySetting.setUuid(op.getUniqueId().toString());
-                    p.sendMessage("§cKlick jetzt auf eine Sicherung!");
+                    p.sendMessage(Values.PREFIX + "Klick jetzt auf eine Sicherung!");
                     plugin.getProtectionManager().setProtectionSetting(p, denySetting);
 
                 }
@@ -137,21 +138,21 @@ public class CMDlock implements CommandExecutor {
 
                     final String name = args[2];
                     if(plugin.getProtectionManager().getLockGroups().get(name) != null) {
-                        p.sendMessage("§cEs gibt bereits eine Gruppe mit diesem Namen!");
+                        p.sendMessage(Values.PREFIX + "Es gibt bereits eine Gruppe mit diesem Namen!");
                         return true;
                     }
 
                     LockGroup lockGroup = new LockGroup(name, p.getUniqueId());
 
                     plugin.getProtectionManager().getLockGroups().put(name, lockGroup);
-                    p.sendMessage("§cDu hast erfolgreich die Gruppe §e"+name+" §cerstellt!");
+                    p.sendMessage(Values.PREFIX + "Du hast erfolgreich die Gruppe §e"+name+" §7erstellt!");
                 }
                 else if (args[1].equalsIgnoreCase("info")) {
 
                     String name = args[2];
                     LockGroup group = plugin.getProtectionManager().getLockGroups().get(name);
                     if(group == null) {
-                        p.sendMessage("§cDiese Gruppe gibt es nicht!");
+                        p.sendMessage(Values.PREFIX + "Diese Gruppe gibt es nicht!");
                         return true;
                     }
 
@@ -181,20 +182,20 @@ public class CMDlock implements CommandExecutor {
                     LockGroup group = plugin.getProtectionManager().getLockGroups().get(args[3]);
 
                     if(group == null) {
-                        p.sendMessage("§cDiese Gruppe gibt es nicht!");
+                        p.sendMessage(Values.PREFIX + "Diese Gruppe gibt es nicht!");
                         return true;
                     }
 
                     if(!group.getOwner().toString().equalsIgnoreCase(p.getUniqueId().toString())) {
-                        p.sendMessage("§cDu bist nicht der Besitzer der Gruppe!");
+                        p.sendMessage(Values.PREFIX + "Du bist nicht der Besitzer der Gruppe!");
                         return true;
                     }
 
                     if(!group.getMembers().contains(op.getUniqueId().toString())) {
                         group.addMember(op.getUniqueId());
-                        p.sendMessage("§cDer Spieler wurde hinzugefügt?");
+                        p.sendMessage(Values.PREFIX + "Der Spieler wurde hinzugefügt");
                     } else {
-                        p.sendMessage("§cDer Spieler ist bereits in der Gruppe!");
+                        p.sendMessage(Values.PREFIX + "Der Spieler ist bereits in der Gruppe!");
                         return true;
                     }
 
@@ -207,9 +208,9 @@ public class CMDlock implements CommandExecutor {
 
                     if(group.getMembers().contains(op.getUniqueId().toString())) {
                         group.removeMember(op.getUniqueId());
-                        p.sendMessage("§cDer Spieler wurde entfernt");
+                        p.sendMessage(Values.PREFIX + "Der Spieler wurde entfernt");
                     } else {
-                        p.sendMessage("§cDer Spieler ist nicht in der Gruppe!");
+                        p.sendMessage(Values.PREFIX + "Der Spieler ist nicht in der Gruppe!");
                         return true;
                     }
 
@@ -233,8 +234,8 @@ public class CMDlock implements CommandExecutor {
                 "§e/lock group add <Spieler> <Gruppe> §cFügt einen Spieler zur Gruppe hinzu\n" +
                 "§e/lock group remove <Spieler> <Gruppe> §cEntfernt einen Spieler von einer Gruppe\n" +
                 "§e/lock group info <Gruppe> §cZeigt Informationen zur Gruppe\n" +
-                "§eMit dem '$' - Zeichen zeigst, du dass es sich bei dem Command um eine Gruppe handlet" +
-                "§eDu weißt null worum es hier geht? Hier findest du mehr Informationen: https://bit.ly/2MmNeK1";
+                "§eMit dem '$' - Zeichen zeigst, du dass es sich bei dem Command um eine Gruppe handlet\n" +
+                "§eDu weißt null worum es hier geht? Hier findest du mehr Informationen: https://forum.ftscraft.de/afglocks";
 
     }
 

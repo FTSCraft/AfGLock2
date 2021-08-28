@@ -10,7 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class ItemStacks {
 
-    private ItemStack schloss_iron, schloss_diamond, schloss_emerald, dietrich;
+    private ItemStack schloss_iron, schloss_diamond, schloss_emerald, schloss_stein, dietrich;
 
     private AfGLock instance;
 
@@ -20,6 +20,7 @@ public class ItemStacks {
         this.schloss_iron = new ItemStack(Material.NAME_TAG, 1);
         this.schloss_diamond = new ItemStack(Material.NAME_TAG, 1);
         this.schloss_emerald = new ItemStack(Material.NAME_TAG, 1);
+        this.schloss_stein = new ItemStack(Material.FLINT, 1);
         this.dietrich = new ItemStack(Material.BLAZE_ROD, 1);
 
         initItems();
@@ -32,22 +33,24 @@ public class ItemStacks {
         ItemMeta ironM = schloss_iron.getItemMeta();
         ItemMeta diamondM = schloss_diamond.getItemMeta();
         ItemMeta emeraldM = schloss_emerald.getItemMeta();
+        ItemMeta steinM = schloss_stein.getItemMeta();
         ItemMeta dietrichM = dietrich.getItemMeta();
 
         ironM.setDisplayName(Values.SCHLOSS_IRON_NAME);
         diamondM.setDisplayName(Values.SCHLOSS_DIAMOND_NAME);
         emeraldM.setDisplayName(Values.SCHLOSS_EMERALD_NAME);
+        steinM.setDisplayName(Values.SCHLOSS_STEIN_NAME);
         dietrichM.setDisplayName(Values.DIETRICH_ITEM_NAME);
 
         schloss_iron.setItemMeta(ironM);
         schloss_diamond.setItemMeta(diamondM);
         schloss_emerald.setItemMeta(emeraldM);
+        schloss_stein.setItemMeta(steinM);
         dietrich.setItemMeta(dietrichM);
 
     }
 
     private void initCrafting() {
-
 
         //Iron Lock
         NamespacedKey ironK = new NamespacedKey(instance, "AFGLOCK-IRONLOCK");
@@ -73,20 +76,29 @@ public class ItemStacks {
         emeraldR.setIngredient('E', Material.EMERALD);
         emeraldR.setIngredient('D', Material.DIAMOND);
 
+        //Stone Lock
+        NamespacedKey steinK = new NamespacedKey(instance, "AFGLOCK-STONELOCK");
+        ShapedRecipe steinR = new ShapedRecipe(steinK, schloss_stein);
+
+        steinR.shape("SAS", "AAA", "SAS");
+        steinR.setIngredient('A', Material.AIR);
+        steinR.setIngredient('S', Material.COBBLESTONE);
+
         //Dietrich
         NamespacedKey dietrichK = new NamespacedKey(instance, "AFGLOCK-DIETRICH");
         ShapedRecipe dietrichR = new ShapedRecipe(dietrichK, dietrich);
 
-        dietrichR.shape("EIE","IBI","DID");
+        dietrichR.shape("AAE","CCC","DAA");
+        dietrichR.setIngredient('A', Material.AIR);
         dietrichR.setIngredient('E', Material.EMERALD);
-        dietrichR.setIngredient('I', Material.IRON_INGOT);
-        dietrichR.setIngredient('B', Material.STICK);
+        dietrichR.setIngredient('C', Material.CHAIN);
         dietrichR.setIngredient('D', Material.DIAMOND);
 
         instance.getServer().addRecipe(ironR);
         instance.getServer().addRecipe(diamondR);
         instance.getServer().addRecipe(emeraldR);
         instance.getServer().addRecipe(dietrichR);
+        instance.getServer().addRecipe(steinR);
 
     }
 
@@ -103,6 +115,10 @@ public class ItemStacks {
     public ItemStack getSchloss_iron()
     {
         return schloss_iron.clone();
+    }
+
+    public ItemStack getSchloss_stein() {
+        return schloss_stein;
     }
 
     public ItemStack getDietrich() {

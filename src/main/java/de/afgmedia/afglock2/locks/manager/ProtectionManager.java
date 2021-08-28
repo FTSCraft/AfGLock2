@@ -134,7 +134,7 @@ public class ProtectionManager {
 
                 p.sendMessage("§e========");
                 p.sendMessage("§eBesitzer: §c" + Bukkit.getOfflinePlayer(protection.getOwner()).getName());
-                p.sendMessage("§eSicherungsleven: §c" + protection.getProtectionTier());
+                p.sendMessage("§eSicherungslevel: §c" + protection.getProtectionTier());
                 p.sendMessage("§eID: §c" + protection.getId());
                 p.sendMessage("§eGruppen: ");
                 for (AllowSetting setting : protection.getAllowSettings()) {
@@ -254,6 +254,8 @@ public class ProtectionManager {
                             tier = 2;
                         } else if (displayName.equalsIgnoreCase(Values.SCHLOSS_EMERALD_NAME)) {
                             tier = 3;
+                        } else if (displayName.equalsIgnoreCase(Values.SCHLOSS_STEIN_NAME)) {
+                            tier = 4;
                         } else {
                             return;
                         }
@@ -322,19 +324,22 @@ public class ProtectionManager {
             if (d <= 0.0625)
                 sucess(p, check);
             else fail(p);
+        } else if (tier == 4) {
+            sucess(p, check);
         }
 
-        /*
+        /*Lockpick lockpick = new Lockpick(check, p, instance);
         lockPicking.put(p, lockpick);
         lockpick.openInventory(p);
-        */
+*/
     }
 
     private void sucess(Player p, Protection protection) {
         instance.getProtectionManager().removeLock(protection);
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             p.closeInventory();
-            p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount() - 1);
+            if (protection.getProtectionTier() != 4)
+                p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount() - 1);
         }, 2);
         p.sendMessage("§cDu hast es geschafft! Die Sicherung ist in seine Einzelteile zersprungen.");
         p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 100, 50);
@@ -384,7 +389,7 @@ public class ProtectionManager {
             protection = new TrapDoorProtection(instance, owner, id, loc, protectionTier);
         } else if (type == ProtectionType.DOOR) {
             protection = new DoorProtection(instance, owner, id, loc, protectionTier);
-        } else if(type == ProtectionType.BARREL) {
+        } else if (type == ProtectionType.BARREL) {
             protection = new BarrelProtection(instance, owner, id, loc, protectionTier);
         }
 

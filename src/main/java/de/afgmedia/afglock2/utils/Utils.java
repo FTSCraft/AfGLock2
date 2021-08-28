@@ -4,8 +4,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.*;
+import org.bukkit.block.data.Bisected;
 import org.bukkit.inventory.DoubleChestInventory;
-import org.bukkit.material.Door;
+import org.bukkit.block.data.type.Door;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Openable;
 
@@ -37,10 +38,9 @@ public class Utils {
             return null;
         }
 
-        BlockState blockState = block.getState();
-        Door door = ((Door) blockState.getData());
+        Door door = ((Door) block.getBlockData());
         Location lower;
-        if (door.isTopHalf()) {
+        if (door.getHalf() == Bisected.Half.TOP) {
             lower = block.getLocation().subtract(0, 1, 0);
         }
         else {
@@ -78,7 +78,7 @@ public class Utils {
 
     public static boolean isLock(String string)
     {
-        return string.equalsIgnoreCase(Values.SCHLOSS_DIAMOND_NAME) || string.equalsIgnoreCase(Values.SCHLOSS_EMERALD_NAME) || string.equalsIgnoreCase(Values.SCHLOSS_IRON_NAME);
+        return string.equalsIgnoreCase(Values.SCHLOSS_DIAMOND_NAME) || string.equalsIgnoreCase(Values.SCHLOSS_EMERALD_NAME) || string.equalsIgnoreCase(Values.SCHLOSS_IRON_NAME) || string.equalsIgnoreCase(Values.SCHLOSS_STEIN_NAME);
     }
 
     public static boolean isLockable(Material material)
@@ -90,19 +90,19 @@ public class Utils {
 
     public static boolean isFenceGate(Material mat) {
         return mat == Material.ACACIA_FENCE_GATE || mat == Material.BIRCH_FENCE_GATE || mat == Material.DARK_OAK_FENCE_GATE || mat == Material.JUNGLE_FENCE_GATE
-                || mat == Material.OAK_FENCE_GATE || mat == Material.SPRUCE_FENCE_GATE;
+                || mat == Material.OAK_FENCE_GATE || mat == Material.SPRUCE_FENCE_GATE || mat == Material.CRIMSON_FENCE_GATE || mat == Material.WARPED_FENCE_GATE;
     }
 
     public static boolean isTrapDoor(Material material)
     {
         return material == Material.ACACIA_TRAPDOOR || material == Material.BIRCH_TRAPDOOR || material == Material.DARK_OAK_TRAPDOOR || material == Material.JUNGLE_TRAPDOOR ||
-                material == Material.OAK_TRAPDOOR || material == Material.SPRUCE_TRAPDOOR;
+                material == Material.OAK_TRAPDOOR || material == Material.SPRUCE_TRAPDOOR || material == Material.WARPED_TRAPDOOR || material == Material.CRIMSON_TRAPDOOR;
     }
 
     public static boolean isDoor(Material material)
     {
         return material == Material.OAK_DOOR || material == Material.ACACIA_DOOR || material == Material.BIRCH_DOOR || material == Material.DARK_OAK_DOOR ||
-                material == Material.JUNGLE_DOOR || material == Material.SPRUCE_DOOR;
+                material == Material.JUNGLE_DOOR || material == Material.SPRUCE_DOOR || material == Material.CRIMSON_DOOR || material == Material.WARPED_DOOR;
     }
 
     public static String getName(UUID uuid) {

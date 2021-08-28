@@ -2,6 +2,7 @@ package de.afgmedia.afglock2.listener;
 
 import de.afgmedia.afglock2.main.AfGLock;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Container;
@@ -49,23 +50,29 @@ public class InteractListener implements Listener {
     @EventHandler
     public void onHopper(InventoryMoveItemEvent event) {
 
+
         InventoryHolder invH = event.getSource().getHolder();
 
         if (invH instanceof Container) {
 
             Container container = (Container) invH;
 
+            if (container.getType() == Material.HOPPER) {
+                return;
+            }
+
             if (plugin.getProtectionManager().isLocked(container.getBlock()))
                 event.setCancelled(true);
 
-        } else if(invH instanceof DoubleChest) {
+        } else if (invH instanceof DoubleChest) {
 
             DoubleChest doubleChest = (DoubleChest) invH;
-            if(plugin.getProtectionManager().isLocked(doubleChest.getLocation().getBlock())) {
+            if (plugin.getProtectionManager().isLocked(doubleChest.getLocation().getBlock())) {
                 event.setCancelled(true);
             }
 
         }
+
 
     }
 

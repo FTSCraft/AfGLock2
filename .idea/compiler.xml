@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="AfGLock2" target="1.8" />
+      <module name="AfGLock2" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

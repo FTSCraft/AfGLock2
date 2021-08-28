@@ -1,3 +1,0 @@
-TODO:
-- Break Listener
-- Bei Misserfolg von ProtectionSetting von der Liste entfernen

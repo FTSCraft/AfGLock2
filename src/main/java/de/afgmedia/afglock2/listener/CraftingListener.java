@@ -21,6 +21,7 @@ public class CraftingListener implements Listener {
 
         if(event.getRecipe().getResult().isSimilar(instance.getItemStacks().getDietrich())) {
             Player p = (Player) event.getWhoClicked();
+
             if(!p.hasPermission("afglock.dietrich")) {
                 event.setCancelled(true);
                 p.sendMessage("§cDieses Item können nur bestimmte Leute craften!");

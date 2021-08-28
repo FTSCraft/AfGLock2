@@ -1,8 +1,9 @@
 name: AfGLock
-version: 1.3.1
+version: 1.5
 author: halberfan | AfGMedia
 main: de.afgmedia.afglock2.main.AfGLock
 api-version: 1.14
 
 commands:
     lock:
+        description: Der wichtigste Befehl fürs Lock-Plugin

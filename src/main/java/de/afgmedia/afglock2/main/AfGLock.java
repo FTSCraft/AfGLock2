@@ -1,6 +1,7 @@
 package de.afgmedia.afglock2.main;
 
 import de.afgmedia.afglock2.commands.CMDlock;
+import de.afgmedia.afglock2.commands.TabLock;
 import de.afgmedia.afglock2.items.ItemStacks;
 import de.afgmedia.afglock2.listener.BlockBreakListener;
 import de.afgmedia.afglock2.listener.CraftingListener;
@@ -41,12 +42,17 @@ public class AfGLock extends JavaPlugin implements Listener {
     private void init()
     {
         protectionManager = new ProtectionManager(this);
+
         new InteractListener(this);
         new InventoryClickListener(this);
         new BlockBreakListener(this);
         new CraftingListener(this);
+
         itemStacks = new ItemStacks(this);
+
         new CMDlock(this);
+        new TabLock(this);
+
         fileManager = new AfGFileManager(this);
         fileManager.loadGroups();
         fileManager.loadLocks();
