@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -49,6 +50,11 @@ public class InteractListener implements Listener {
 
 
         InventoryHolder invH = event.getSource().getHolder();
+
+        //Nicht für AfGLock, aber zu klein um es jetzt n extra Listener in anderen Plugins zu machen
+        if(event.getDestination().getType() == InventoryType.COMPOSTER) {
+            event.setCancelled(true);
+        }
 
         if (invH instanceof Container) {
 

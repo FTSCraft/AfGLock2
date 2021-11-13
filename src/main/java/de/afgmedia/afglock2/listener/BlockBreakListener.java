@@ -29,7 +29,6 @@ public class BlockBreakListener implements Listener {
     @EventHandler
     public void onZombie(EntityBreakDoorEvent event) {
 
-        System.out.println("Ein Zombie hat versucht eine Tür zu knacken!");
         Block block = event.getBlock();
         Protection protection = instance.getProtectionManager().getByBlock(block);
 

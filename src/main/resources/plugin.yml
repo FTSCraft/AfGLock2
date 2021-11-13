@@ -1,8 +1,9 @@
 name: AfGLock
-version: 1.5
+version: 1.5.3
 author: halberfan | AfGMedia
 main: de.afgmedia.afglock2.main.AfGLock
 api-version: 1.14
+load: POSTWORLD
 
 commands:
     lock:

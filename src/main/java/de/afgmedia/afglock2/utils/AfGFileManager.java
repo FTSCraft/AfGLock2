@@ -7,6 +7,7 @@ import de.afgmedia.afglock2.locks.settings.AllowSetting;
 import de.afgmedia.afglock2.main.AfGLock;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AfGFileManager {
 
@@ -43,6 +46,7 @@ public class AfGFileManager {
                 long y = cfg.getLong("location.y");
                 long z = cfg.getLong("location.z");
                 String world = cfg.getString("location.world");
+
                 Location loc = new Location(Bukkit.getWorld(world), x, y, z);
                 /*if(!Utils.isLockable(loc.getBlock().getType())) {
                     file.delete();
@@ -85,7 +89,7 @@ public class AfGFileManager {
      }
 
     public void saveLocks() {
-
+    /*
         for(File file : Objects.requireNonNull(lockFolder.listFiles())) {
             file.delete();
         }
@@ -96,10 +100,14 @@ public class AfGFileManager {
                 File file = new File(lockFolder + "//" + protection.getId() + ".yml");
                 FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
+                Logger.getLogger("Minecraft").log(Level.INFO, protection.getLocation().getWorld().getName());
+                final String w = protection.getLocation().getWorld().getName();
+                System.out.println(w);
+
                 cfg.set("location.x", protection.getLocation().getX());
                 cfg.set("location.y", protection.getLocation().getY());
                 cfg.set("location.z", protection.getLocation().getZ());
-                cfg.set("location.world", protection.getLocation().getWorld().getName());
+                cfg.set("location.world", w);
                 cfg.set("owner", protection.getOwner().toString());
                 cfg.set("type", protection.getProtectionType().toString());
                 cfg.set("tier", protection.getProtectionTier());
@@ -126,6 +134,7 @@ public class AfGFileManager {
             }
 
         }
+        */
     }
 
     public void saveGroups()

@@ -61,17 +61,17 @@ public class ItemStacks {
         NamespacedKey ironK = new NamespacedKey(instance, "AFGLOCK-IRONLOCK");
         ShapedRecipe ironR = new ShapedRecipe(ironK, schloss_iron);
 
-        ironR.shape("III", "IGI", "III");
+        ironR.shape("III", "ICI", "III");
         ironR.setIngredient('I', Material.IRON_INGOT);
-        ironR.setIngredient('G', Material.GOLD_NUGGET);
+        ironR.setIngredient('C', Material.COPPER_INGOT);
 
         //Diamond Lock
         NamespacedKey diamondK = new NamespacedKey(instance, "AFGLOCK-DIAMONDLOCK");
         ShapedRecipe diamondR = new ShapedRecipe(diamondK, schloss_diamond);
 
-        diamondR.shape("DDD","DGD","DDD");
+        diamondR.shape("DDD","DED","DDD");
         diamondR.setIngredient('D', Material.DIAMOND);
-        diamondR.setIngredient('G', Material.GOLD_INGOT);
+        diamondR.setIngredient('E', Material.EMERALD);
 
         //Emerald Lock
         NamespacedKey emeraldK = new NamespacedKey(instance, "AFGLOCK-EMERALDLOCK");
@@ -93,7 +93,7 @@ public class ItemStacks {
         NamespacedKey dietrichK = new NamespacedKey(instance, "AFGLOCK-DIETRICH");
         ShapedRecipe dietrichR = new ShapedRecipe(dietrichK, dietrich);
 
-        dietrichR.shape("AAE","CCC","DAA");
+        dietrichR.shape("EAA","CCC","AAD");
         dietrichR.setIngredient('A', Material.AIR);
         dietrichR.setIngredient('E', Material.EMERALD);
         dietrichR.setIngredient('C', Material.CHAIN);

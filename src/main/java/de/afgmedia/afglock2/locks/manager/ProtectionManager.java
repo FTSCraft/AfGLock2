@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProtectionManager {
 
@@ -86,6 +87,9 @@ public class ProtectionManager {
         } else return ReturnType.FAIL;
 
         protections.put(location, protection);
+
+
+        protection.saveToFile();
 
         latestID++;
 
@@ -283,7 +287,7 @@ public class ProtectionManager {
             if (itemStack != null) {
                 ItemMeta itemMeta = itemStack.getItemMeta();
                 if (itemMeta != null) {
-                    if (itemMeta.getDisplayName().equalsIgnoreCase("§5Dietrich")) {
+                    if (itemMeta.getDisplayName().equalsIgnoreCase("§5Dietrich") && itemStack.getType() == Material.BLAZE_ROD) {
                         //p.sendMessage("§cDiese Funktion ist noch nicht freigeschaltet weil es noch verbuggt ist!");
                         //return;
 
@@ -371,6 +375,7 @@ public class ProtectionManager {
 
     public void removeLock(Protection protection) {
         protections.remove(protection.getLocation());
+        protection.delete();
     }
 
     public void addLock(Location loc, UUID owner, ProtectionType type, int protectionTier, List<AllowSetting> allowSettings, int id) {
