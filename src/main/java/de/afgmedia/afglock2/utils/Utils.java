@@ -82,7 +82,7 @@ public class Utils {
     public static boolean isLockable(Material material)
     {
 
-        return material == Material.CHEST || isDoor(material) || isTrapDoor(material) || material == Material.TRAPPED_CHEST || isFenceGate(material) || isBarrel(material);
+        return material == Material.CHEST || isDoor(material) || isTrapDoor(material) || material == Material.TRAPPED_CHEST || isFenceGate(material) || isBarrel(material) || material == Material.NOTE_BLOCK;
 
     }
 

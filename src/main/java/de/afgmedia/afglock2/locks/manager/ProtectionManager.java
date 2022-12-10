@@ -57,6 +57,9 @@ public class ProtectionManager {
             type = ProtectionType.GATE;
         else if (Utils.isBarrel(material))
             type = ProtectionType.BARREL;
+        else if (material == Material.NOTE_BLOCK) {
+            type = ProtectionType.NOTE_BLOCK;
+        }
         else return ReturnType.FAIL;
 
         if (type == ProtectionType.DOUBLE_CHEST) {
@@ -84,6 +87,8 @@ public class ProtectionManager {
             protection = new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
         } else if (type == ProtectionType.BARREL) {
             protection = new BarrelProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+        } else if (type == ProtectionType.NOTE_BLOCK) {
+            protection = new NoteBlockProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
         } else return ReturnType.FAIL;
 
         protections.put(location, protection);
