@@ -7,6 +7,7 @@ public class Values {
             SCHLOSS_DIAMOND_NAME = "§5Diamantschloss",
             SCHLOSS_IRON_NAME = "§5Eisenschloss",
             SCHLOSS_STEIN_NAME = "§7Steinschloss",
+            SCHLOSS_COPPER_NAME = "§5Kupferschloss",
             DIETRICH_ITEM_NAME = "§5Dietrich";
 
     public static final String PREFIX = "§7[§5AFG-Lock§7] ";

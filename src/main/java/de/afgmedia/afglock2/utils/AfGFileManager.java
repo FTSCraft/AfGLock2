@@ -36,7 +36,9 @@ public class AfGFileManager {
     }
 
     public void loadLocks() {
-
+        long timeBeginn = System.currentTimeMillis();
+        System.out.println("Lade Locks...");
+        String worldTest = "";
         try {
 
             for (File file : Objects.requireNonNull(lockFolder.listFiles())) {
@@ -46,6 +48,9 @@ public class AfGFileManager {
                 long y = cfg.getLong("location.y");
                 long z = cfg.getLong("location.z");
                 String world = cfg.getString("location.world");
+                if(world.equalsIgnoreCase("abbauwelt"))
+                    continue;
+                worldTest = world;
 
                 Location loc = new Location(Bukkit.getWorld(world), x, y, z);
                 /*if(!Utils.isLockable(loc.getBlock().getType())) {
@@ -82,17 +87,17 @@ public class AfGFileManager {
 
             instance.getProtectionManager().latestIDPlus();
 
-        } catch (NullPointerException ignored) {
-
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+            System.out.println(worldTest);
         }
+        long time = (System.currentTimeMillis() - timeBeginn);
+        System.out.println("Zeit zum Laden: " + time + " Millisekunden");
 
      }
 
     public void saveLocks() {
-    /*
-        for(File file : Objects.requireNonNull(lockFolder.listFiles())) {
-            file.delete();
-        }
+/*
 
         for (Protection protection : instance.getProtectionManager().getProtections().values()) {
 
@@ -100,9 +105,7 @@ public class AfGFileManager {
                 File file = new File(lockFolder + "//" + protection.getId() + ".yml");
                 FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
-                Logger.getLogger("Minecraft").log(Level.INFO, protection.getLocation().getWorld().getName());
                 final String w = protection.getLocation().getWorld().getName();
-                System.out.println(w);
 
                 cfg.set("location.x", protection.getLocation().getX());
                 cfg.set("location.y", protection.getLocation().getY());
@@ -134,7 +137,7 @@ public class AfGFileManager {
             }
 
         }
-        */
+*/
     }
 
     public void saveGroups()
@@ -161,7 +164,10 @@ public class AfGFileManager {
     {
         try {
             for (File file : Objects.requireNonNull(groupFolder.listFiles())) {
-
+                final String fileName = file.getName();
+                if(fileName.contains("Ä") || fileName.contains("ä") || fileName.contains("ö") || fileName.contains("Ö") || fileName.contains("Ü") || fileName.contains("ü") || fileName.contains("ß")) {
+                    continue;
+                }
                 try {
                     FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
                     UUID owner = UUID.fromString(cfg.getString("owner"));
@@ -173,6 +179,7 @@ public class AfGFileManager {
                     }
                     instance.getProtectionManager().getLockGroups().put(name, group);
                 } catch (Exception e) {
+
                     e.printStackTrace();
                 }
             }

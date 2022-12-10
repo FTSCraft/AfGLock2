@@ -117,6 +117,7 @@ public class ProtectionManager {
         Block block = event.getClickedBlock();
         ItemStack inHand = p.getInventory().getItemInMainHand();
         if (!ChestShop.canAccess(p, block)) {
+            event.setCancelled(true);
             return;
         }
         if (playerSetting.containsKey(p)) {
@@ -256,6 +257,8 @@ public class ProtectionManager {
                             tier = 3;
                         } else if (displayName.equalsIgnoreCase(Values.SCHLOSS_STEIN_NAME)) {
                             tier = 4;
+                        } else if(displayName.equalsIgnoreCase(Values.SCHLOSS_COPPER_NAME)) {
+                            tier = 5;
                         } else {
                             return;
                         }

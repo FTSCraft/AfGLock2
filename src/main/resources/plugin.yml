@@ -8,3 +8,4 @@ load: POSTWORLD
 commands:
     lock:
         description: Der wichtigste Befehl fürs Lock-Plugin
+

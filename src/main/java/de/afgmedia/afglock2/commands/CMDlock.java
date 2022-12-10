@@ -16,6 +16,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CMDlock implements CommandExecutor {
 
@@ -138,6 +140,15 @@ public class CMDlock implements CommandExecutor {
                 if (args[1].equalsIgnoreCase("create")) {
 
                     final String name = args[2];
+                    System.out.println(name);
+                    String regex = "[a-zA-Z0-9]+";
+                    Pattern pattern = Pattern.compile(regex);
+                    Matcher m = pattern.matcher(name);
+                    System.out.println(m.matches());
+                    if(!m.matches()) {
+                        p.sendMessage(Values.PREFIX + "Dieser Name ist nicht okay! Verwende nur Buchstaben von a-Z und Zahlen von 0-9");
+                        return true;
+                    }
                     if(plugin.getProtectionManager().getLockGroups().get(name) != null) {
                         p.sendMessage(Values.PREFIX + "Es gibt bereits eine Gruppe mit diesem Namen!");
                         return true;
@@ -206,6 +217,11 @@ public class CMDlock implements CommandExecutor {
                     final String player = args[2];
                     OfflinePlayer op = Bukkit.getOfflinePlayer(player);
                     LockGroup group = plugin.getProtectionManager().getLockGroups().get(args[3]);
+
+                    if(!group.getOwner().toString().equalsIgnoreCase(p.getUniqueId().toString())) {
+                        p.sendMessage(Values.PREFIX + "Du bist nicht der Besitzer der Gruppe!");
+                        return true;
+                    }
 
                     if(group.getMembers().contains(op.getUniqueId().toString())) {
                         group.removeMember(op.getUniqueId());
