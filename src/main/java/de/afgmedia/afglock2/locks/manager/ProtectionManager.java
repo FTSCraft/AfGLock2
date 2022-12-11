@@ -82,6 +82,7 @@ public class ProtectionManager {
             case DOUBLE_CHEST -> new DoubleChestProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
             case TRAP_DOOR -> new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
             case GATE -> new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+            case BARREL -> new BarrelProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
             case NOTE_BLOCK -> new NoteBlockProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
             case LECTERN -> new LecternProtection(instance, latestID, player.getUniqueId(), location, protectionTier);
             default -> null;
