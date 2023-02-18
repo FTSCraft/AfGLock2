@@ -57,7 +57,11 @@ public class ProtectionManager {
             type = ProtectionType.GATE;
         else if (Utils.isBarrel(material))
             type = ProtectionType.BARREL;
-        else return ReturnType.FAIL;
+        else if (material == Material.NOTE_BLOCK) {
+            type = ProtectionType.NOTE_BLOCK;
+        } else if (material == Material.LECTERN) {
+            type = ProtectionType.NOTE_BLOCK;
+        } else return ReturnType.FAIL;
 
         if (type == ProtectionType.DOUBLE_CHEST) {
             location = Utils.getLeftLocationOfDoubleChest(block);
@@ -70,21 +74,23 @@ public class ProtectionManager {
         if (!ChestShop.canAccess(player, block))
             return ReturnType.ALREADY_LOCKED;
 
-        Protection protection;
 
-        if (type == ProtectionType.DOOR) {
-            protection = new DoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-        } else if (type == ProtectionType.CHEST) {
-            protection = new ChestProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-        } else if (type == ProtectionType.DOUBLE_CHEST) {
-            protection = new DoubleChestProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-        } else if (type == ProtectionType.TRAP_DOOR) {
-            protection = new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-        } else if (type == ProtectionType.GATE) {
-            protection = new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-        } else if (type == ProtectionType.BARREL) {
-            protection = new BarrelProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-        } else return ReturnType.FAIL;
+
+        Protection protection = switch (type) {
+            case DOOR -> new DoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+            case CHEST -> new ChestProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+            case DOUBLE_CHEST -> new DoubleChestProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+            case TRAP_DOOR -> new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+            case GATE -> new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+            case BARREL -> new BarrelProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+            case NOTE_BLOCK -> new NoteBlockProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+            case LECTERN -> new LecternProtection(instance, latestID, player.getUniqueId(), location, protectionTier);
+            default -> null;
+        };
+
+        if (protection == null) {
+            return ReturnType.FAIL;
+        }
 
         protections.put(location, protection);
 
