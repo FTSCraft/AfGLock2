@@ -87,20 +87,17 @@ public class Utils {
     }
 
     public static boolean isFenceGate(Material mat) {
-        return mat == Material.ACACIA_FENCE_GATE || mat == Material.BIRCH_FENCE_GATE || mat == Material.DARK_OAK_FENCE_GATE || mat == Material.JUNGLE_FENCE_GATE
-                || mat == Material.OAK_FENCE_GATE || mat == Material.SPRUCE_FENCE_GATE || mat == Material.CRIMSON_FENCE_GATE || mat == Material.WARPED_FENCE_GATE;
+        return mat.toString().contains("FENCE_GATE");
     }
 
-    public static boolean isTrapDoor(Material material)
+    public static boolean isTrapDoor(Material mat)
     {
-        return material == Material.ACACIA_TRAPDOOR || material == Material.BIRCH_TRAPDOOR || material == Material.DARK_OAK_TRAPDOOR || material == Material.JUNGLE_TRAPDOOR ||
-                material == Material.OAK_TRAPDOOR || material == Material.SPRUCE_TRAPDOOR || material == Material.WARPED_TRAPDOOR || material == Material.CRIMSON_TRAPDOOR;
+        return mat.toString().contains("TRAPDOOR");
     }
 
     public static boolean isDoor(Material material)
     {
-        return material == Material.OAK_DOOR || material == Material.ACACIA_DOOR || material == Material.BIRCH_DOOR || material == Material.DARK_OAK_DOOR ||
-                material == Material.JUNGLE_DOOR || material == Material.SPRUCE_DOOR || material == Material.CRIMSON_DOOR || material == Material.WARPED_DOOR;
+        return material.toString().contains("DOOR");
     }
 
     public static String getName(UUID uuid) {
