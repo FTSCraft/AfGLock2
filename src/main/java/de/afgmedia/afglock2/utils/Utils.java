@@ -92,12 +92,12 @@ public class Utils {
 
     public static boolean isTrapDoor(Material mat)
     {
-        return mat.toString().contains("TRAPDOOR");
+        return mat.toString().contains("_TRAPDOOR");
     }
 
     public static boolean isDoor(Material material)
     {
-        return material.toString().contains("DOOR");
+        return material.toString().contains("_DOOR");
     }
 
     public static String getName(UUID uuid) {
