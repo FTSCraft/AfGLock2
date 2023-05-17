@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ProtectionManager {
 
@@ -75,15 +74,17 @@ public class ProtectionManager {
             return ReturnType.ALREADY_LOCKED;
 
 
-
         Protection protection = switch (type) {
             case DOOR -> new DoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
             case CHEST -> new ChestProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-            case DOUBLE_CHEST -> new DoubleChestProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-            case TRAP_DOOR -> new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+            case DOUBLE_CHEST ->
+                    new DoubleChestProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+            case TRAP_DOOR ->
+                    new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
             case GATE -> new TrapDoorProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
             case BARREL -> new BarrelProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
-            case NOTE_BLOCK -> new NoteBlockProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
+            case NOTE_BLOCK ->
+                    new NoteBlockProtection(instance, player.getUniqueId(), latestID, location, protectionTier);
             case LECTERN -> new LecternProtection(instance, latestID, player.getUniqueId(), location, protectionTier);
             default -> null;
         };
@@ -155,7 +156,7 @@ public class ProtectionManager {
                         p.sendMessage("§c- " + Bukkit.getOfflinePlayer(UUID.fromString(setting.getUuid())).getName());
                 }
 
-            } else if (ps instanceof AllowSetting) {
+            } else if (ps instanceof AllowSetting allowSetting) {
 
                 Protection protection = getByBlock(block);
                 if (protection == null) {
@@ -169,8 +170,6 @@ public class ProtectionManager {
                     playerSetting.remove(p);
                     return;
                 }
-
-                AllowSetting allowSetting = (AllowSetting) ps;
 
                 if (allowSetting.getType() == AllowSetting.AllowSettingType.PLAYER) {
 
@@ -185,7 +184,7 @@ public class ProtectionManager {
                 }
 
 
-            } else if (ps instanceof DenySetting) {
+            } else if (ps instanceof DenySetting denySetting) {
 
                 Protection protection = getByBlock(block);
                 if (protection == null) {
@@ -199,8 +198,6 @@ public class ProtectionManager {
                     playerSetting.remove(p);
                     return;
                 }
-
-                DenySetting denySetting = (DenySetting) ps;
 
                 protection.removeAllowSetting(denySetting);
 
@@ -263,7 +260,7 @@ public class ProtectionManager {
                             tier = 3;
                         } else if (displayName.equalsIgnoreCase(Values.SCHLOSS_STEIN_NAME)) {
                             tier = 4;
-                        } else if(displayName.equalsIgnoreCase(Values.SCHLOSS_COPPER_NAME)) {
+                        } else if (displayName.equalsIgnoreCase(Values.SCHLOSS_COPPER_NAME)) {
                             tier = 5;
                         } else {
                             return;

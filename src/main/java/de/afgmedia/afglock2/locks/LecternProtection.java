@@ -1,7 +1,5 @@
 package de.afgmedia.afglock2.locks;
 
-import de.afgmedia.afglock2.locks.Protection;
-import de.afgmedia.afglock2.locks.ProtectionType;
 import de.afgmedia.afglock2.locks.settings.AllowSetting;
 import de.afgmedia.afglock2.main.AfGLock;
 import org.bukkit.Location;

@@ -3,6 +3,7 @@ package de.afgmedia.afglock2.locks;
 import de.afgmedia.afglock2.locks.settings.AllowSetting;
 import de.afgmedia.afglock2.main.AfGLock;
 import org.bukkit.Location;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -15,8 +16,7 @@ public class TrapDoorProtection extends Protection {
     private final int protectionTier;
     private final List<AllowSetting> allowSettings;
 
-    public TrapDoorProtection(AfGLock instance, UUID owner, int id, Location location, int tier)
-    {
+    public TrapDoorProtection(AfGLock instance, UUID owner, int id, Location location, int tier) {
         super(instance);
         this.protectionTier = tier;
         this.allowSettings = new ArrayList<>();
@@ -24,39 +24,34 @@ public class TrapDoorProtection extends Protection {
         this.owner = owner;
         this.location = location;
     }
+
     @Override
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
     @Override
-    public ProtectionType getProtectionType()
-    {
+    public ProtectionType getProtectionType() {
         return ProtectionType.TRAP_DOOR;
     }
 
     @Override
-    public UUID getOwner()
-    {
+    public UUID getOwner() {
         return owner;
     }
 
     @Override
-    public List<AllowSetting> getAllowSettings()
-    {
+    public List<AllowSetting> getAllowSettings() {
         return allowSettings;
     }
 
     @Override
-    public Location getLocation()
-    {
+    public Location getLocation() {
         return location;
     }
 
     @Override
-    public int getProtectionTier()
-    {
+    public int getProtectionTier() {
         return protectionTier;
     }
 }

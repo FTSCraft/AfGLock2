@@ -32,8 +32,7 @@ public class Lockpick {
     private final AfGLock plugin;
     private boolean wait = false;
 
-    public Lockpick(Protection protection, Player player, AfGLock plugin)
-    {
+    public Lockpick(Protection protection, Player player, AfGLock plugin) {
         this.plugin = plugin;
         this.protection = protection;
         this.protectionTier = protection.getProtectionTier();
@@ -49,8 +48,7 @@ public class Lockpick {
         setupInventory();
     }
 
-    private void setupInventory()
-    {
+    private void setupInventory() {
 
         ItemStack goal = new ItemStack(Material.CHEST, 1);
         ItemStack piston = new ItemStack(Material.IRON_BLOCK, 1);
@@ -97,13 +95,11 @@ public class Lockpick {
 
     }
 
-    public void openInventory(Player player)
-    {
+    public void openInventory(Player player) {
         player.openInventory(inventory);
     }
 
-    public void lockPick(InventoryClickEvent event)
-    {
+    public void lockPick(InventoryClickEvent event) {
         if (wait) {
             player.sendMessage("§cBitte warte ein Moment");
             event.setCancelled(true);
@@ -141,8 +137,7 @@ public class Lockpick {
                     return;
                 }
 
-            }
-            else if (slot == currentLowerSlot) {
+            } else if (slot == currentLowerSlot) {
                 wait = true;
                 Bukkit.getScheduler().runTaskLater(plugin, () -> wait = false, 20);
                 if (solution.get(lastKolben) != 2) {
@@ -150,8 +145,7 @@ public class Lockpick {
                     return;
                 }
 
-            }
-            else {
+            } else {
                 if (kolbenSlots.get(lastKolben) == slot) {
                     event.setCancelled(false);
                     return;
@@ -167,15 +161,13 @@ public class Lockpick {
             }
             lastKolben++;
 
-        }
-        else {
+        } else {
             event.setCancelled(true);
         }
 
     }
 
-    private void fail(InventoryClickEvent event)
-    {
+    private void fail(InventoryClickEvent event) {
         Player p = (Player) event.getWhoClicked();
         event.setCancelled(false);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -188,8 +180,7 @@ public class Lockpick {
         plugin.getProtectionManager().lockPickFail(player);
     }
 
-    private void success()
-    {
+    private void success() {
         plugin.getProtectionManager().removeLock(protection);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             player.closeInventory();

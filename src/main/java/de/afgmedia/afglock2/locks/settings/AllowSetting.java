@@ -1,40 +1,32 @@
 package de.afgmedia.afglock2.locks.settings;
 
-import de.afgmedia.afglock2.locks.settings.ProtectionSetting;
-
 public class AllowSetting implements ProtectionSetting {
 
     private final AllowSettingType type;
     private String group;
     private String uuid;
 
-    public AllowSetting(AllowSettingType type)
-    {
+    public AllowSetting(AllowSettingType type) {
         this.type = type;
     }
 
-    public void setGroup(String group)
-    {
+    public void setGroup(String group) {
         this.group = group;
     }
 
-    public void setUuid(String uuid)
-    {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
-    public String getGroup()
-    {
+    public String getGroup() {
         return group;
     }
 
-    public String getUuid()
-    {
+    public String getUuid() {
         return uuid;
     }
 
-    public AllowSettingType getType()
-    {
+    public AllowSettingType getType() {
         return type;
     }
 

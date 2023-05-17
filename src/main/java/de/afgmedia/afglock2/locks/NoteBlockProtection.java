@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class NoteBlockProtection extends Protection{
+public class NoteBlockProtection extends Protection {
     private final int id;
     private final UUID owner;
     private final Location location;

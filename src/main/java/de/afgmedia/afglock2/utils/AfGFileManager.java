@@ -1,13 +1,11 @@
 package de.afgmedia.afglock2.utils;
 
-import de.afgmedia.afglock2.locks.Protection;
 import de.afgmedia.afglock2.locks.ProtectionType;
 import de.afgmedia.afglock2.locks.group.LockGroup;
 import de.afgmedia.afglock2.locks.settings.AllowSetting;
 import de.afgmedia.afglock2.main.AfGLock;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -17,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class AfGFileManager {
 
@@ -26,12 +22,11 @@ public class AfGFileManager {
     private final File groupFolder;
     private final AfGLock instance;
 
-    public AfGFileManager(AfGLock instance)
-    {
+    public AfGFileManager(AfGLock instance) {
         this.instance = instance;
         this.lockFolder = new File(instance.getDataFolder() + "//locks//");
-        this.groupFolder = new File(instance.getDataFolder()+"//groups");
-        if(!lockFolder.exists())
+        this.groupFolder = new File(instance.getDataFolder() + "//groups");
+        if (!lockFolder.exists())
             lockFolder.mkdirs();
     }
 
@@ -48,7 +43,7 @@ public class AfGFileManager {
                 long y = cfg.getLong("location.y");
                 long z = cfg.getLong("location.z");
                 String world = cfg.getString("location.world");
-                if(world.equalsIgnoreCase("abbauwelt"))
+                if (world.equalsIgnoreCase("abbauwelt"))
                     continue;
                 worldTest = world;
 
@@ -73,8 +68,7 @@ public class AfGFileManager {
 
                         if (allowSettingType == AllowSetting.AllowSettingType.PLAYER) {
                             allowSetting.setUuid(cfg.getString("allow." + s + ".value"));
-                        }
-                        else {
+                        } else {
                             allowSetting.setGroup(cfg.getString("allow." + s + ".value"));
                         }
                         allowSettings.add(allowSetting);
@@ -94,7 +88,7 @@ public class AfGFileManager {
         long time = (System.currentTimeMillis() - timeBeginn);
         System.out.println("Zeit zum Laden: " + time + " Millisekunden");
 
-     }
+    }
 
     public void saveLocks() {
 /*
@@ -140,16 +134,16 @@ public class AfGFileManager {
 */
     }
 
-    public void saveGroups()
-    {
+    public void saveGroups() {
 
-        for(LockGroup group : instance.getProtectionManager().getLockGroups().values()) {
-            File file = new File(groupFolder+"//"+group.getName()+".yml");
+        for (LockGroup group : instance.getProtectionManager().getLockGroups().values()) {
+            File file = new File(groupFolder + "//" + group.getName() + ".yml");
             FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
             cfg.set("owner", group.getOwner().toString());
             cfg.set("name", group.getName());
             cfg.set("member", group.getMembers().toArray());
+            cfg.set("moderators", group.getModerators().toArray());
 
             try {
                 cfg.save(file);
@@ -160,23 +154,40 @@ public class AfGFileManager {
 
     }
 
-    public void loadGroups()
-    {
+    public void loadGroups() {
         try {
             for (File file : Objects.requireNonNull(groupFolder.listFiles())) {
                 final String fileName = file.getName();
-                if(fileName.contains("Ä") || fileName.contains("ä") || fileName.contains("ö") || fileName.contains("Ö") || fileName.contains("Ü") || fileName.contains("ü") || fileName.contains("ß")) {
+                if (fileName.contains("Ä") || fileName.contains("ä") || fileName.contains("ö") || fileName.contains("Ö") || fileName.contains("Ü") || fileName.contains("ü") || fileName.contains("ß")) {
                     continue;
                 }
                 try {
                     FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+
                     UUID owner = UUID.fromString(cfg.getString("owner"));
+
                     String name = cfg.getString("name");
-                    List<String> list = (List<String>) cfg.getList("member");
+
+                    List<String> members = (List<String>) cfg.getList("member");
+
                     LockGroup group = new LockGroup(name, owner);
-                    for (String member : list) {
+
+                    if (cfg.contains("moderators")) {
+
+                        List<String> mods = (List<String>) cfg.getList("moderators");
+
+                        for (String mod : mods) {
+                            group.addModerator(UUID.fromString(mod));
+                        }
+
+                    }
+
+
+                    for (String member : members) {
                         group.addMember(UUID.fromString(member));
                     }
+
+
                     instance.getProtectionManager().getLockGroups().put(name, group);
                 } catch (Exception e) {
 

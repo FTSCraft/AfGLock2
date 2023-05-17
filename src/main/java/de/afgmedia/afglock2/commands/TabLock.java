@@ -17,11 +17,13 @@ public class TabLock implements TabCompleter {
 
     final List<String> arguments = new ArrayList<>();
     final List<String> argumentsGroups = new ArrayList<>();
+    private final AfGLock plugin;
 
     public TabLock(AfGLock plugin) {
+        this.plugin = plugin;
         plugin.getCommand("lock").setTabCompleter(this);
         arguments.addAll(Arrays.asList("info", "delete", "add", "remove", "group", "help"));
-        argumentsGroups.addAll(Arrays.asList("create", "add", "remove"));
+        argumentsGroups.addAll(Arrays.asList("create", "add", "remove", "owner", "moderator", "info"));
     }
 
     @Override
@@ -57,13 +59,25 @@ public class TabLock implements TabCompleter {
 
             if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove")) {
 
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if (onlinePlayer.getName().toLowerCase().startsWith(args[1].toLowerCase()))
-                        result.add(onlinePlayer.getName());
+                if (args[1].equalsIgnoreCase("$")) {
+                    for (String groupName : plugin.getProtectionManager().getLockGroups().keySet()) {
+                        if (groupName.toLowerCase().startsWith(args[1].toLowerCase())) {
+                            result.add(groupName);
+                        }
+                    }
+                    return result;
                 }
 
-                if(args[1].equals(""))
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    if (onlinePlayer.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
+                        result.add(onlinePlayer.getName());
+                    }
+                }
+
+                if (args[1].equals("")) {
                     result.add("$");
+                }
+
 
             }
             return result;

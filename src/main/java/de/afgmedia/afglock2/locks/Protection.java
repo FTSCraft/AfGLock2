@@ -1,6 +1,7 @@
 package de.afgmedia.afglock2.locks;
 
 import de.afgmedia.afglock2.locks.group.LockGroup;
+import de.afgmedia.afglock2.locks.lochkarte.Lochkarte;
 import de.afgmedia.afglock2.locks.settings.AllowSetting;
 import de.afgmedia.afglock2.locks.settings.DenySetting;
 import de.afgmedia.afglock2.main.AfGLock;
@@ -34,9 +35,25 @@ public abstract class Protection {
     }
 
     public void addAllowSetting(AllowSetting setting) {
+        if(getAllowSettings().contains(setting))
+            return;
+
         getAllowSettings().add(setting);
 
         saveToFile();
+    }
+
+    public void applyLochkarte(Lochkarte lochkarte) {
+        for (UUID uuid : lochkarte.getUuids()) {
+            AllowSetting allowSetting = new AllowSetting(AllowSetting.AllowSettingType.PLAYER);
+            allowSetting.setUuid(uuid.toString());
+            addAllowSetting(allowSetting);
+        }
+        for (String group : lochkarte.getGroups()) {
+            AllowSetting allowSetting = new AllowSetting(AllowSetting.AllowSettingType.GROUP);
+            allowSetting.setGroup(group);
+            addAllowSetting(allowSetting);
+        }
     }
 
     public boolean isAllowedToAccess(UUID uuid) {
@@ -139,5 +156,6 @@ public abstract class Protection {
         File file = new File(lockFolder + "//" + getId() + ".yml");
         file.delete();
 
-    };
+    }
+
 }

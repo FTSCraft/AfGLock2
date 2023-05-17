@@ -1,12 +1,22 @@
 package de.afgmedia.afglock2.utils;
 
+import de.afgmedia.afglock2.main.AfGLock;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.*;
+import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.block.data.Bisected;
-import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.block.data.type.Door;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.DoubleChestInventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Random;
 import java.util.UUID;
@@ -14,9 +24,9 @@ import java.util.UUID;
 public class Utils {
 
     private static final Random random = new Random();
+    private static NamespacedKey nskItem = null;
 
-    public static Location getLeftLocationOfDoubleChest(Block block)
-    {
+    public static Location getLeftLocationOfDoubleChest(Block block) {
 
         BlockState blockState = block.getState();
 
@@ -30,9 +40,8 @@ public class Utils {
         return block.getLocation();
     }
 
-    public static Location getLowerLocationOfDoor(Block block)
-    {
-        if(!isDoor(block.getType())) {
+    public static Location getLowerLocationOfDoor(Block block) {
+        if (!isDoor(block.getType())) {
             return null;
         }
 
@@ -40,11 +49,10 @@ public class Utils {
         Location lower;
         if (door.getHalf() == Bisected.Half.TOP) {
             lower = block.getLocation().subtract(0, 1, 0);
-        }
-        else {
-            if(!door.isOpen()) {
+        } else {
+            if (!door.isOpen()) {
                 lower = block.getLocation().subtract(0, 1, 0);
-                if(isDoor(lower.getBlock().getType()))
+                if (isDoor(lower.getBlock().getType()))
                     return lower;
                 else return block.getLocation();
             }
@@ -54,8 +62,7 @@ public class Utils {
 
     }
 
-    public static boolean isDoubleChest(Block block)
-    {
+    public static boolean isDoubleChest(Block block) {
         BlockState blockState = block.getState();
 
         if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST) {
@@ -65,8 +72,7 @@ public class Utils {
         return false;
     }
 
-    public static int getOneOrTwo()
-    {
+    public static int getOneOrTwo() {
 
         if (random.nextBoolean())
             return 1;
@@ -74,13 +80,11 @@ public class Utils {
 
     }
 
-    public static boolean isLock(String string)
-    {
+    public static boolean isLock(String string) {
         return string.equalsIgnoreCase(Values.SCHLOSS_DIAMOND_NAME) || string.equalsIgnoreCase(Values.SCHLOSS_EMERALD_NAME) || string.equalsIgnoreCase(Values.SCHLOSS_IRON_NAME) || string.equalsIgnoreCase(Values.SCHLOSS_STEIN_NAME);
     }
 
-    public static boolean isLockable(Material material)
-    {
+    public static boolean isLockable(Material material) {
 
         return material == Material.CHEST || isDoor(material) || isTrapDoor(material) || material == Material.TRAPPED_CHEST || isFenceGate(material) || isBarrel(material) || material == Material.NOTE_BLOCK || material == Material.LECTERN;
 
@@ -90,13 +94,11 @@ public class Utils {
         return mat.toString().contains("FENCE_GATE");
     }
 
-    public static boolean isTrapDoor(Material mat)
-    {
+    public static boolean isTrapDoor(Material mat) {
         return mat.toString().contains("_TRAPDOOR");
     }
 
-    public static boolean isDoor(Material material)
-    {
+    public static boolean isDoor(Material material) {
         return material.toString().contains("_DOOR");
     }
 
@@ -111,4 +113,24 @@ public class Utils {
     public static boolean isBarrel(Material material) {
         return material == Material.BARREL;
     }
+
+    public static boolean holdsLochkarte(Player player, AfGLock plugin) {
+
+        ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+
+        ItemMeta itemMeta = itemInMainHand.getItemMeta();
+
+        if (nskItem == null)
+            nskItem = new NamespacedKey(plugin, "item");
+
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+
+        if (pdc.has(nskItem)) {
+            return pdc.get(nskItem, PersistentDataType.STRING).equalsIgnoreCase("lochkarte");
+        }
+
+        return false;
+
+    }
+
 }

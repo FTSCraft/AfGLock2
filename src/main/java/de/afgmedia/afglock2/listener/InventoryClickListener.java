@@ -12,15 +12,13 @@ public class InventoryClickListener implements Listener {
 
     private final AfGLock plugin;
 
-    public InventoryClickListener(AfGLock plugin)
-    {
+    public InventoryClickListener(AfGLock plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
-    public void onClick(InventoryClickEvent event)
-    {
+    public void onClick(InventoryClickEvent event) {
         Player p = (Player) event.getWhoClicked();
         Inventory inventory = event.getInventory();
 

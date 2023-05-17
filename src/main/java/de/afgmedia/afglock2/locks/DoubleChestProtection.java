@@ -16,8 +16,7 @@ public class DoubleChestProtection extends Protection {
     private final int protectionTier;
     private final List<AllowSetting> allowSettings;
 
-    public DoubleChestProtection(AfGLock instance, UUID owner, int id, Location location, int tier)
-    {
+    public DoubleChestProtection(AfGLock instance, UUID owner, int id, Location location, int tier) {
         super(instance);
         this.protectionTier = tier;
         this.allowSettings = new ArrayList<>();
@@ -27,38 +26,32 @@ public class DoubleChestProtection extends Protection {
     }
 
     @Override
-    public Location getLocation()
-    {
+    public Location getLocation() {
         return location;
     }
 
     @Override
-    public ProtectionType getProtectionType()
-    {
+    public ProtectionType getProtectionType() {
         return ProtectionType.DOUBLE_CHEST;
     }
 
     @Override
-    public List<AllowSetting> getAllowSettings()
-    {
+    public List<AllowSetting> getAllowSettings() {
         return allowSettings;
     }
 
     @Override
-    public UUID getOwner()
-    {
+    public UUID getOwner() {
         return owner;
     }
 
     @Override
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
     @Override
-    public int getProtectionTier()
-    {
+    public int getProtectionTier() {
         return protectionTier;
     }
 }

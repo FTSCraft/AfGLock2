@@ -20,20 +20,17 @@ public class AfGLock extends JavaPlugin implements Listener {
     private ItemStacks itemStacks;
 
     @Override
-    public void onEnable()
-    {
+    public void onEnable() {
         init();
     }
 
     @Override
-    public void onDisable()
-    {
+    public void onDisable() {
         fileManager.saveGroups();
         fileManager.saveLocks();
     }
 
-    private void init()
-    {
+    private void init() {
         protectionManager = new ProtectionManager(this);
 
         new InteractListener(this);
@@ -52,8 +49,7 @@ public class AfGLock extends JavaPlugin implements Listener {
 
     }
 
-    public ProtectionManager getProtectionManager()
-    {
+    public ProtectionManager getProtectionManager() {
         return protectionManager;
     }
 

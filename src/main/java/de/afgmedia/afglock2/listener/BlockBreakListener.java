@@ -20,8 +20,7 @@ public class BlockBreakListener implements Listener {
 
     private final AfGLock instance;
 
-    public BlockBreakListener(AfGLock instance)
-    {
+    public BlockBreakListener(AfGLock instance) {
         this.instance = instance;
         instance.getServer().getPluginManager().registerEvents(this, instance);
     }
@@ -32,7 +31,7 @@ public class BlockBreakListener implements Listener {
         Block block = event.getBlock();
         Protection protection = instance.getProtectionManager().getByBlock(block);
 
-        if(protection == null) {
+        if (protection == null) {
             return;
         }
 
@@ -41,22 +40,21 @@ public class BlockBreakListener implements Listener {
     }
 
     @EventHandler()
-    public void onBreak(BlockBreakEvent event)
-    {
+    public void onBreak(BlockBreakEvent event) {
         Player p = event.getPlayer();
         Block block = event.getBlock();
         Protection protection = instance.getProtectionManager().getByBlock(block);
-        if(protection == null) {
+        if (protection == null) {
             return;
         }
 
-        if(p.hasPermission("afglock.admin")) {
+        if (p.hasPermission("afglock.admin")) {
             instance.getProtectionManager().removeLock(protection);
             p.sendMessage("§cDu hast die Sicherung mit deinen Rechten entfernt!");
             return;
         }
 
-        if(!protection.getOwner().toString().equalsIgnoreCase(p.getUniqueId().toString())) {
+        if (!protection.getOwner().toString().equalsIgnoreCase(p.getUniqueId().toString())) {
             event.setCancelled(true);
             p.sendMessage("§cNur der Besitzer der Sicherung darf diesen Block abbauen!");
         } else {
@@ -83,9 +81,9 @@ public class BlockBreakListener implements Listener {
 
         Player p = event.getPlayer();
 
-        if(p.hasPermission("afglock.reisender") && !receivedMessage.contains(p)) {
+        if (p.hasPermission("afglock.reisender") && !receivedMessage.contains(p)) {
 
-            if(Utils.isLockable(event.getBlockPlaced().getType())) {
+            if (Utils.isLockable(event.getBlockPlaced().getType())) {
                 p.sendMessage(Values.PREFIX + "Vergiss nicht deine Kisten zu sichern! Zumindest mit einem Steinschloss welches nur Räuber ohne Probleme aufbekommen. Das machst du indem du in jeder Ecke des Craftingfelds einen Cobblestone packst" +
                         "\n" +
                         "Für mehr Informationen klicke auf diesen Link: https://forum.ftscraft.de/afglocks");

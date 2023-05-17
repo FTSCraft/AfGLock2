@@ -6,13 +6,11 @@ public class RemoveSetting implements ProtectionSetting {
 
     private final Player player;
 
-    public RemoveSetting(Player player)
-    {
+    public RemoveSetting(Player player) {
         this.player = player;
     }
 
-    public Player getPlayer()
-    {
+    public Player getPlayer() {
         return player;
     }
 }
