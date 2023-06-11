@@ -34,6 +34,9 @@ public class ItemStacks {
         this.lochkarte = new ItemStack(Material.PAPER, 1);
         this.dietrich = new ItemStack(Material.BLAZE_ROD, 1);
 
+        nameSpacedKeyId = new NamespacedKey(instance, "id");
+        nameSpacedKeyItem = new NamespacedKey(instance, "item");
+
         initItems();
         initCrafting();
     }
@@ -55,8 +58,8 @@ public class ItemStacks {
 
         lochkarteM.displayName(Component.text(Values.LOCHKARTE));
         lochkarteM.lore(Arrays.asList(Component.text("Diese Lochkarte ist noch nicht beschrieben."), Values.ITEM_IDENTIFIER));
-        lochkarteM.getPersistentDataContainer().set(new NamespacedKey(instance, "id"), PersistentDataType.INTEGER, -1);
-        lochkarteM.getPersistentDataContainer().set(new NamespacedKey(instance, "item"), PersistentDataType.STRING, "lochkarte");
+        lochkarteM.getPersistentDataContainer().set(nameSpacedKeyId, PersistentDataType.INTEGER, -1);
+        lochkarteM.getPersistentDataContainer().set(nameSpacedKeyItem, PersistentDataType.STRING, "lochkarte");
 
         schloss_iron.setItemMeta(ironM);
         schloss_diamond.setItemMeta(diamondM);
@@ -123,7 +126,7 @@ public class ItemStacks {
         instance.getServer().addRecipe(emeraldR);
         instance.getServer().addRecipe(dietrichR);
         instance.getServer().addRecipe(steinR);
-        //instance.getServer().addRecipe(lochkarteR);
+        instance.getServer().addRecipe(lochkarteR);
 
     }
 

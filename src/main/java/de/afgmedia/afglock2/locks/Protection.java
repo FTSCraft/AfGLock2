@@ -35,25 +35,55 @@ public abstract class Protection {
     }
 
     public void addAllowSetting(AllowSetting setting) {
-        if(getAllowSettings().contains(setting))
+        addAllowSetting(setting, true);
+    }
+
+    public void addAllowSetting(AllowSetting setting, boolean saveToFile) {
+
+        if (checkForDuplicates(setting))
             return;
 
         getAllowSettings().add(setting);
 
-        saveToFile();
+        if (saveToFile)
+            saveToFile();
     }
+
+    /**
+     * Checks for duplicated AllowSettings
+     * @param allowSetting - AllowSetting to check if it's already in
+     * @return true when AllowSetting is a duplicate, otherwise false
+     */
+    private boolean checkForDuplicates(AllowSetting allowSetting) {
+
+        for (AllowSetting setting : getAllowSettings()) {
+            if (setting.getType() == allowSetting.getType()) {
+                if(setting.getType() == AllowSetting.AllowSettingType.PLAYER) {
+                    if(setting.getUuid().equals(allowSetting.getUuid()))
+                        return true;
+                } else {
+                    if(setting.getGroup().equals(allowSetting.getGroup()))
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 
     public void applyLochkarte(Lochkarte lochkarte) {
         for (UUID uuid : lochkarte.getUuids()) {
             AllowSetting allowSetting = new AllowSetting(AllowSetting.AllowSettingType.PLAYER);
             allowSetting.setUuid(uuid.toString());
-            addAllowSetting(allowSetting);
+            addAllowSetting(allowSetting, false);
         }
         for (String group : lochkarte.getGroups()) {
             AllowSetting allowSetting = new AllowSetting(AllowSetting.AllowSettingType.GROUP);
             allowSetting.setGroup(group);
-            addAllowSetting(allowSetting);
+            addAllowSetting(allowSetting, false);
         }
+        saveToFile();
     }
 
     public boolean isAllowedToAccess(UUID uuid) {

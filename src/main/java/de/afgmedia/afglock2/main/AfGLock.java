@@ -8,7 +8,6 @@ import de.afgmedia.afglock2.listener.CraftingListener;
 import de.afgmedia.afglock2.listener.InteractListener;
 import de.afgmedia.afglock2.listener.InventoryClickListener;
 import de.afgmedia.afglock2.locks.manager.ProtectionManager;
-import de.afgmedia.afglock2.utils.AfGFileManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,7 +15,6 @@ public class AfGLock extends JavaPlugin implements Listener {
 
     private ProtectionManager protectionManager;
     private AfGFileManager fileManager;
-
     private ItemStacks itemStacks;
 
     @Override
@@ -26,8 +24,10 @@ public class AfGLock extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        protectionManager.saveLochkartenFromCache();
         fileManager.saveGroups();
         fileManager.saveLocks();
+        fileManager.saveConfig();
     }
 
     private void init() {
@@ -55,5 +55,9 @@ public class AfGLock extends JavaPlugin implements Listener {
 
     public ItemStacks getItemStacks() {
         return itemStacks;
+    }
+
+    public AfGFileManager getFileManager() {
+        return fileManager;
     }
 }

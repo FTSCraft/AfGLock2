@@ -24,8 +24,6 @@ import java.util.UUID;
 public class Utils {
 
     private static final Random random = new Random();
-    private static NamespacedKey nskItem = null;
-
     public static Location getLeftLocationOfDoubleChest(Block block) {
 
         BlockState blockState = block.getState();
@@ -114,23 +112,6 @@ public class Utils {
         return material == Material.BARREL;
     }
 
-    public static boolean holdsLochkarte(Player player, AfGLock plugin) {
 
-        ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
-
-        ItemMeta itemMeta = itemInMainHand.getItemMeta();
-
-        if (nskItem == null)
-            nskItem = new NamespacedKey(plugin, "item");
-
-        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
-
-        if (pdc.has(nskItem)) {
-            return pdc.get(nskItem, PersistentDataType.STRING).equalsIgnoreCase("lochkarte");
-        }
-
-        return false;
-
-    }
 
 }

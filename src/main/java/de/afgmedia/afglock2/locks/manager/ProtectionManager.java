@@ -3,6 +3,7 @@ package de.afgmedia.afglock2.locks.manager;
 import com.Acrobot.ChestShop.Plugins.ChestShop;
 import de.afgmedia.afglock2.locks.*;
 import de.afgmedia.afglock2.locks.group.LockGroup;
+import de.afgmedia.afglock2.locks.lochkarte.Lochkarte;
 import de.afgmedia.afglock2.locks.lockpick.Lockpick;
 import de.afgmedia.afglock2.locks.settings.*;
 import de.afgmedia.afglock2.main.AfGLock;
@@ -30,6 +31,7 @@ public class ProtectionManager {
     private final HashMap<Player, ProtectionSetting> playerSetting = new HashMap<>();
     private final HashMap<String, LockGroup> lockGroups = new HashMap<>();
     private final HashMap<Player, Lockpick> lockPicking = new HashMap<>();
+    private final HashMap<Integer, Lochkarte> lochkartenCache = new HashMap<>();
 
     public ProtectionManager(AfGLock instance) {
         this.instance = instance;
@@ -116,6 +118,7 @@ public class ProtectionManager {
         return protections.get(location);
     }
 
+    //TODO: Code auslagern
     public void handleInteractEvent(PlayerInteractEvent event) {
         Player p = event.getPlayer();
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
@@ -127,6 +130,7 @@ public class ProtectionManager {
             event.setCancelled(true);
             return;
         }
+        // WeFür den Fall, dass der Spieler gerade eine Einstellung vornehmen möchte...
         if (playerSetting.containsKey(p)) {
             event.setCancelled(true);
             ProtectionSetting ps = playerSetting.get(p);
@@ -234,6 +238,7 @@ public class ProtectionManager {
 
         Protection protection = getByBlock(block);
 
+        // Für den Fall, dass die Protection noch nicht da ist
         if (protection == null) {
 
             ItemStack itemStack = p.getInventory().getItemInMainHand();
@@ -294,7 +299,7 @@ public class ProtectionManager {
                 ItemMeta itemMeta = itemStack.getItemMeta();
                 if (itemMeta != null) {
                     if (itemMeta.getDisplayName().equalsIgnoreCase("§5Dietrich") && itemStack.getType() == Material.BLAZE_ROD) {
-                        //p.sendMessage("§cDiese Funktion ist noch nicht freigeschaltet weil es noch verbuggt ist!");
+                        //p.sendMessage("§cDiese Funktion ist noch nicht freigeschaltet, weil es noch verbuggt ist!");
                         //return;
 
                         startLockPicking(protection, p);
@@ -304,6 +309,25 @@ public class ProtectionManager {
                 }
             }
             p.sendMessage("§cDieser Block ist gesichert!");
+
+        } else {
+            //Für den Fall, dass der Spieler auf den Block zugreifen kann
+            //Spieler muss Owner von Lock sein für Lochkarte
+            if(!protection.isOwner(p.getUniqueId())) {
+                System.out.println(1);
+                return;
+            }
+
+            if (!Lochkarte.holdsLochkarte(p)) {
+                System.out.println(2);
+                return;
+            }
+
+            System.out.println(3);
+            Lochkarte lochkarte = getLochkarte(Lochkarte.getLochkarteId(p.getInventory().getItemInMainHand()));
+            protection.applyLochkarte(lochkarte);
+            System.out.println(4);
+            //TODO: Nachricht
 
         }
 
@@ -440,4 +464,22 @@ public class ProtectionManager {
     public HashMap<Location, Protection> getProtections() {
         return protections;
     }
+
+    public Lochkarte getLochkarte(int id) {
+        //TODO: Load Lochkarte from file when requested and then store in cache
+        if(!lochkartenCache.containsKey(id)) {
+            Lochkarte lochkarte = instance.getFileManager().loadLochkarte(id);
+            lochkartenCache.put(lochkarte.getId(), lochkarte);
+            return lochkarte;
+        }
+        return lochkartenCache.get(id);
+    }
+
+    public void saveLochkartenFromCache() {
+        for (Lochkarte value : lochkartenCache.values()) {
+
+            instance.getFileManager().saveLochkarte(value);
+        }
+    }
+
 }

@@ -1,10 +1,13 @@
 package de.afgmedia.afglock2.locks.lochkarte;
 
 import de.afgmedia.afglock2.items.ItemStacks;
+import de.afgmedia.afglock2.locks.settings.AllowSetting;
 import de.afgmedia.afglock2.utils.Values;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -30,6 +33,7 @@ public class Lochkarte {
     private final ArrayList<UUID> uuids;
     private final ArrayList<String> groups;
 
+
     public Lochkarte(int id) {
         this.id = id;
         uuids = new ArrayList<>();
@@ -37,7 +41,7 @@ public class Lochkarte {
     }
 
     public boolean addPlayer(UUID player) {
-        if (uuids.size() >= Values.LOCHKARTE_PLAYER_LIMIT) {
+        if (uuids.size() >= Values.LOCHKARTE_PLAYER_LIMIT || uuids.contains(player)) {
             return false;
         }
         uuids.add(player);
@@ -49,7 +53,7 @@ public class Lochkarte {
     }
 
     public boolean addGroup(String group) {
-        if (groups.size() >= Values.LOCHKARTE_GROUP_LIMIT)
+        if (groups.size() >= Values.LOCHKARTE_GROUP_LIMIT || groups.contains(group))
             return false;
 
         groups.add(group);
@@ -61,13 +65,12 @@ public class Lochkarte {
     }
 
 
-    public void generateItemMeta(ItemMeta itemMeta) {
-
+    public void generateItemMeta(ItemStack item) {
+        ItemMeta itemMeta = item.getItemMeta();
         PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
         persistentDataContainer.set(ItemStacks.nameSpacedKeyId, PersistentDataType.INTEGER, id);
         itemMeta.lore(generateLore());
-
-
+        item.setItemMeta(itemMeta);
     }
 
     private List<Component> generateLore() {
@@ -107,6 +110,41 @@ public class Lochkarte {
 
     public void setLocktype(int locktype) {
         this.locktype = locktype;
+    }
+
+    public boolean addAllowSetting(AllowSetting allowSetting) {
+        if (allowSetting.getType() == AllowSetting.AllowSettingType.PLAYER) {
+            return addPlayer(UUID.fromString(allowSetting.getUuid()));
+        } else if (allowSetting.getType() == AllowSetting.AllowSettingType.GROUP) {
+            return addGroup(allowSetting.getGroup());
+        } else return false;
+    }
+
+    public static boolean holdsLochkarte(Player player) {
+        return isLochkarte(player.getInventory().getItemInMainHand());
+    }
+
+    private static boolean isLochkarte(ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        if (itemMeta == null)
+            return false;
+
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+
+        if (pdc.has(ItemStacks.nameSpacedKeyItem)) {
+            return pdc.get(ItemStacks.nameSpacedKeyItem, PersistentDataType.STRING).equalsIgnoreCase("lochkarte");
+        }
+        return false;
+    }
+
+    public static int getLochkarteId(ItemStack itemStack) {
+        if (!isLochkarte(itemStack)) {
+            throw new IllegalArgumentException("ItemStack is not a Lochkarte");
+        }
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+        return pdc.get(ItemStacks.nameSpacedKeyId, PersistentDataType.INTEGER);
     }
 
 
