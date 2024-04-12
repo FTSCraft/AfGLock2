@@ -2,6 +2,7 @@ package de.afgmedia.afglock2.main;
 
 import de.afgmedia.afglock2.commands.CMDlock;
 import de.afgmedia.afglock2.commands.TabLock;
+import de.afgmedia.afglock2.database.DatabaseManager;
 import de.afgmedia.afglock2.items.ItemStacks;
 import de.afgmedia.afglock2.listener.BlockBreakListener;
 import de.afgmedia.afglock2.listener.CraftingListener;
@@ -11,14 +12,20 @@ import de.afgmedia.afglock2.locks.manager.ProtectionManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Logger;
+
 public class AfGLock extends JavaPlugin implements Listener {
 
     private ProtectionManager protectionManager;
     private AfGFileManager fileManager;
     private ItemStacks itemStacks;
 
+    private static AfGLock instance;
+    private DatabaseManager databaseManager;
+
     @Override
     public void onEnable() {
+        instance = this;
         init();
     }
 
@@ -26,8 +33,8 @@ public class AfGLock extends JavaPlugin implements Listener {
     public void onDisable() {
         protectionManager.saveLochkartenFromCache();
         fileManager.saveGroups();
-        fileManager.saveLocks();
         fileManager.saveConfig();
+        databaseManager.shutdownConnection();
     }
 
     private void init() {
@@ -45,7 +52,7 @@ public class AfGLock extends JavaPlugin implements Listener {
 
         fileManager = new AfGFileManager(this);
         fileManager.loadGroups();
-        fileManager.loadLocks();
+        databaseManager = new DatabaseManager();
 
     }
 
@@ -59,5 +66,13 @@ public class AfGLock extends JavaPlugin implements Listener {
 
     public AfGFileManager getFileManager() {
         return fileManager;
+    }
+
+    public static AfGLock getInstance() {
+        return instance;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
     }
 }

@@ -2,10 +2,15 @@ package de.afgmedia.afglock2.locks.lochkarte;
 
 import de.afgmedia.afglock2.items.ItemStacks;
 import de.afgmedia.afglock2.locks.settings.AllowSetting;
+import de.afgmedia.afglock2.locks.settings.DenySetting;
+import de.afgmedia.afglock2.main.AfGLock;
 import de.afgmedia.afglock2.utils.Values;
+import de.ftscraft.ftsutils.FTSUtils;
+import de.ftscraft.ftsutils.items.ItemReader;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -29,7 +34,6 @@ public class Lochkarte {
      */
 
     private final int id;
-    private int locktype;
     private final ArrayList<UUID> uuids;
     private final ArrayList<String> groups;
 
@@ -66,9 +70,8 @@ public class Lochkarte {
 
 
     public void generateItemMeta(ItemStack item) {
+        ItemReader.addPDC(item, "LOCHKARTE_ID", id, PersistentDataType.INTEGER);
         ItemMeta itemMeta = item.getItemMeta();
-        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
-        persistentDataContainer.set(ItemStacks.nameSpacedKeyId, PersistentDataType.INTEGER, id);
         itemMeta.lore(generateLore());
         item.setItemMeta(itemMeta);
     }
@@ -76,7 +79,6 @@ public class Lochkarte {
     private List<Component> generateLore() {
         List<Component> components = new ArrayList<>();
 
-        components.add(Component.text("§7Lock: §c"));
         components.add(Component.empty());
         components.add(Component.text("§7Spieler:"));
         for (UUID uuid : uuids) {
@@ -87,6 +89,8 @@ public class Lochkarte {
         for (String group : groups) {
             components.add(Component.text(ChatColor.RED + group));
         }
+        components.add(Component.empty());
+        components.add(Component.text("§7ID: §c"+id));
 
 
         return components;
@@ -94,10 +98,6 @@ public class Lochkarte {
 
     public int getId() {
         return id;
-    }
-
-    public int getLocktype() {
-        return locktype;
     }
 
     public ArrayList<UUID> getUuids() {
@@ -108,16 +108,20 @@ public class Lochkarte {
         return groups;
     }
 
-    public void setLocktype(int locktype) {
-        this.locktype = locktype;
-    }
-
     public boolean addAllowSetting(AllowSetting allowSetting) {
         if (allowSetting.getType() == AllowSetting.AllowSettingType.PLAYER) {
             return addPlayer(UUID.fromString(allowSetting.getUuid()));
         } else if (allowSetting.getType() == AllowSetting.AllowSettingType.GROUP) {
             return addGroup(allowSetting.getGroup());
         } else return false;
+    }
+
+    public boolean removeAllowSetting(DenySetting denySetting) {
+        if(denySetting.getType() == AllowSetting.AllowSettingType.PLAYER) {
+            return removePlayer(UUID.fromString(denySetting.getUuid()));
+        } else {
+            return removeGroup(denySetting.getGroup());
+        }
     }
 
     public static boolean holdsLochkarte(Player player) {
@@ -129,11 +133,9 @@ public class Lochkarte {
 
         if (itemMeta == null)
             return false;
-
-        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
-
-        if (pdc.has(ItemStacks.nameSpacedKeyItem)) {
-            return pdc.get(ItemStacks.nameSpacedKeyItem, PersistentDataType.STRING).equalsIgnoreCase("lochkarte");
+        String sign;
+        if ((sign = ItemReader.getSign(itemMeta)) != null) {
+            return sign.equals("LOCHKARTE");
         }
         return false;
     }
@@ -142,9 +144,8 @@ public class Lochkarte {
         if (!isLochkarte(itemStack)) {
             throw new IllegalArgumentException("ItemStack is not a Lochkarte");
         }
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
-        return pdc.get(ItemStacks.nameSpacedKeyId, PersistentDataType.INTEGER);
+        return ItemReader.getPDC(itemStack, "LOCHKARTE_ID", PersistentDataType.INTEGER);
+
     }
 
 

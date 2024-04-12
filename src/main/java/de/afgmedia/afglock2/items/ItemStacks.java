@@ -2,6 +2,7 @@ package de.afgmedia.afglock2.items;
 
 import de.afgmedia.afglock2.main.AfGLock;
 import de.afgmedia.afglock2.utils.Values;
+import de.ftscraft.ftsutils.items.ItemBuilder;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -18,6 +19,7 @@ public class ItemStacks {
     private final ItemStack schloss_diamond;
     private final ItemStack schloss_emerald;
     private final ItemStack schloss_stein;
+    private final ItemStack schloss_copper;
     private final ItemStack dietrich;
     private final ItemStack lochkarte;
 
@@ -27,47 +29,17 @@ public class ItemStacks {
 
     public ItemStacks(AfGLock plugin) {
         this.instance = plugin;
-        this.schloss_iron = new ItemStack(Material.NAME_TAG, 1);
-        this.schloss_diamond = new ItemStack(Material.NAME_TAG, 1);
-        this.schloss_emerald = new ItemStack(Material.NAME_TAG, 1);
-        this.schloss_stein = new ItemStack(Material.FLINT, 1);
-        this.lochkarte = new ItemStack(Material.PAPER, 1);
-        this.dietrich = new ItemStack(Material.BLAZE_ROD, 1);
+        this.schloss_iron = new ItemBuilder(Material.NAME_TAG).name(Values.SCHLOSS_IRON_NAME).sign("IRON_LOCK").build();
+        this.schloss_diamond = new ItemBuilder(Material.NAME_TAG).name(Values.SCHLOSS_DIAMOND_NAME).sign("DIAMOND_LOCK").build();
+        this.schloss_emerald = new ItemBuilder(Material.NAME_TAG).name(Values.SCHLOSS_EMERALD_NAME).sign("EMERALD_LOCK").build();
+        this.schloss_stein = new ItemBuilder(Material.FLINT).name(Values.SCHLOSS_STEIN_NAME).sign("STONE_LOCK").build();
+        this.schloss_copper = new ItemBuilder(Material.NAME_TAG).name(Values.SCHLOSS_COPPER_NAME).sign("COPPER_LOCK").build();
+        ItemBuilder lochkartenBuilder = new ItemBuilder(Material.PAPER).name(Values.LOCHKARTE).sign("LOCHKARTE");
+        lochkartenBuilder.addPDC("LOCHKARTE_ID", -1, PersistentDataType.INTEGER);
+        this.lochkarte = lochkartenBuilder.build();
+        this.dietrich = new ItemBuilder(Material.BLAZE_ROD).name(Values.DIETRICH_ITEM_NAME).sign("DIETRICH").build();
 
-        nameSpacedKeyId = new NamespacedKey(instance, "id");
-        nameSpacedKeyItem = new NamespacedKey(instance, "item");
-
-        initItems();
         initCrafting();
-    }
-
-    private void initItems() {
-
-        ItemMeta ironM = schloss_iron.getItemMeta();
-        ItemMeta diamondM = schloss_diamond.getItemMeta();
-        ItemMeta emeraldM = schloss_emerald.getItemMeta();
-        ItemMeta steinM = schloss_stein.getItemMeta();
-        ItemMeta dietrichM = dietrich.getItemMeta();
-        ItemMeta lochkarteM = lochkarte.getItemMeta();
-
-        ironM.setDisplayName(Values.SCHLOSS_IRON_NAME);
-        diamondM.setDisplayName(Values.SCHLOSS_DIAMOND_NAME);
-        emeraldM.setDisplayName(Values.SCHLOSS_EMERALD_NAME);
-        steinM.setDisplayName(Values.SCHLOSS_STEIN_NAME);
-        dietrichM.setDisplayName(Values.DIETRICH_ITEM_NAME);
-
-        lochkarteM.displayName(Component.text(Values.LOCHKARTE));
-        lochkarteM.lore(Arrays.asList(Component.text("Diese Lochkarte ist noch nicht beschrieben."), Values.ITEM_IDENTIFIER));
-        lochkarteM.getPersistentDataContainer().set(nameSpacedKeyId, PersistentDataType.INTEGER, -1);
-        lochkarteM.getPersistentDataContainer().set(nameSpacedKeyItem, PersistentDataType.STRING, "lochkarte");
-
-        schloss_iron.setItemMeta(ironM);
-        schloss_diamond.setItemMeta(diamondM);
-        schloss_emerald.setItemMeta(emeraldM);
-        schloss_stein.setItemMeta(steinM);
-        dietrich.setItemMeta(dietrichM);
-        lochkarte.setItemMeta(lochkarteM);
-
     }
 
     private void initCrafting() {
@@ -95,6 +67,14 @@ public class ItemStacks {
         emeraldR.shape("EEE", "EDE", "EEE");
         emeraldR.setIngredient('E', Material.EMERALD);
         emeraldR.setIngredient('D', Material.DIAMOND);
+
+        //Copper Lock
+        NamespacedKey copperK = new NamespacedKey(instance, "AFGLOCK-COPPERLOCK");
+        ShapedRecipe copperR = new ShapedRecipe(copperK, schloss_copper);
+
+        copperR.shape("CCC", "CGC", "CCC");
+        copperR.setIngredient('C', Material.COPPER_INGOT);
+        copperR.setIngredient('G', Material.GOLD_NUGGET);
 
         //Stone Lock
         NamespacedKey steinK = new NamespacedKey(instance, "AFGLOCK-STONELOCK");
@@ -127,6 +107,7 @@ public class ItemStacks {
         instance.getServer().addRecipe(dietrichR);
         instance.getServer().addRecipe(steinR);
         instance.getServer().addRecipe(lochkarteR);
+        instance.getServer().addRecipe(copperR);
 
     }
 
@@ -144,6 +125,10 @@ public class ItemStacks {
 
     public ItemStack getSchloss_stein() {
         return schloss_stein;
+    }
+
+    public ItemStack getSchloss_copper() {
+        return schloss_copper;
     }
 
     public ItemStack getDietrich() {

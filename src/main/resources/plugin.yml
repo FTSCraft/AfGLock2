@@ -1,11 +1,14 @@
 name: AfGLock
-version: 1.7
+version: ${project.version}
 author: halberfan | AfGMedia
 main: de.afgmedia.afglock2.main.AfGLock
 api-version: 1.19
 load: POSTWORLD
+depend:
+    - FTSUtils
+    - ChestShop
+
 
 commands:
     lock:
         description: Der wichtigste Befehl fürs Lock-Plugin
-

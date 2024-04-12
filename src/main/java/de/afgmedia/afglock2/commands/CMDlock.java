@@ -8,6 +8,7 @@ import de.afgmedia.afglock2.locks.settings.InfoSetting;
 import de.afgmedia.afglock2.locks.settings.RemoveSetting;
 import de.afgmedia.afglock2.main.AfGLock;
 import de.afgmedia.afglock2.utils.Values;
+import de.ftscraft.ftsutils.uuidfetcher.UUIDFetcher;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -96,11 +97,16 @@ public class CMDlock implements CommandExecutor {
                     if (Lochkarte.holdsLochkarte(p)) {
                         ItemStack item = p.getInventory().getItemInMainHand();
                         int id = Lochkarte.getLochkarteId(item);
-                        p.sendMessage(id + "");
+                        if (id == -1 && item.getAmount() > 1) {
+                            p.sendMessage("Bitte pass auf dass du nur ");
+                            return true;
+                        }
                         Lochkarte lochkarte = plugin.getProtectionManager().getLochkarte(id);
                         if (lochkarte.addAllowSetting(allowSetting)) {
                             lochkarte.generateItemMeta(item);
-                        } else p.sendMessage(Values.PREFIX + "Entweder ist die max. Anzahl an Gruppen/Spielern überschritten oder die Gruppe/der Spieler ist bereits auf der Karte verzeichnet!");
+                            p.sendMessage(Values.PREFIX + "Der/Die Spieler/Gruppe wurde in die Lochkarte eingestanzt!");
+                        } else
+                            p.sendMessage(Values.PREFIX + "Entweder ist die max. Anzahl an Gruppen/Spielern überschritten oder die Gruppe/der Spieler ist bereits auf der Karte verzeichnet!");
                         return true;
                     }
 
@@ -112,6 +118,7 @@ public class CMDlock implements CommandExecutor {
 
                     String name = args[1];
                     //Is Group
+                    DenySetting denySetting;
                     if (name.startsWith("$")) {
                         name = name.replace("$", "");
                         LockGroup group = plugin.getProtectionManager().getLockGroups().get(name);
@@ -121,21 +128,32 @@ public class CMDlock implements CommandExecutor {
                             return true;
                         }
 
-                        DenySetting denySetting = new DenySetting(AllowSetting.AllowSettingType.GROUP);
+                        denySetting = new DenySetting(AllowSetting.AllowSettingType.GROUP);
                         denySetting.setGroup(name);
-                        p.sendMessage(Values.PREFIX + "Klick jetzt auf eine Sicherung!");
-                        plugin.getProtectionManager().setProtectionSetting(p, denySetting);
 
                     } else {
 
                         OfflinePlayer op = Bukkit.getOfflinePlayer(name);
 
-                        DenySetting denySetting = new DenySetting(AllowSetting.AllowSettingType.PLAYER);
+                        denySetting = new DenySetting(AllowSetting.AllowSettingType.PLAYER);
                         denySetting.setUuid(op.getUniqueId().toString());
-                        p.sendMessage(Values.PREFIX + "Klick jetzt auf eine Sicherung!");
-                        plugin.getProtectionManager().setProtectionSetting(p, denySetting);
 
                     }
+
+                    if (Lochkarte.holdsLochkarte(p)) {
+                        ItemStack item = p.getInventory().getItemInMainHand();
+                        int id = Lochkarte.getLochkarteId(item);
+                        Lochkarte lochkarte = plugin.getProtectionManager().getLochkarte(id);
+                        if (lochkarte.removeAllowSetting(denySetting)) {
+                            lochkarte.generateItemMeta(item);
+                            p.sendMessage(Values.PREFIX + "Die Löcher für den Spieler/der Gruppe wurden gestopft!");
+                        } else
+                            p.sendMessage(Values.PREFIX + "Der/Die Spieler/Gruppe ist wohl nicht eingestanzt!");
+                        return true;
+                    }
+
+                    p.sendMessage(Values.PREFIX + "Klick jetzt auf eine Sicherung!");
+                    plugin.getProtectionManager().setProtectionSetting(p, denySetting);
 
                 } else p.sendMessage(help());
             }
@@ -145,11 +163,9 @@ public class CMDlock implements CommandExecutor {
                     if (args[1].equalsIgnoreCase("create")) {
 
                         final String name = args[2];
-                        System.out.println(name);
                         String regex = "[a-zA-Z0-9]+";
                         Pattern pattern = Pattern.compile(regex);
                         Matcher m = pattern.matcher(name);
-                        System.out.println(m.matches());
                         if (!m.matches()) {
                             p.sendMessage(Values.PREFIX + "Dieser Name ist nicht okay! Verwende nur Buchstaben von a-Z und Zahlen von 0-9");
                             return true;
@@ -165,29 +181,27 @@ public class CMDlock implements CommandExecutor {
                         p.sendMessage(Values.PREFIX + "Du hast erfolgreich die Gruppe §e" + name + " §7erstellt!");
                     } else if (args[1].equalsIgnoreCase("info")) {
 
-                        String name = args[2];
-                        LockGroup group = plugin.getProtectionManager().getLockGroups().get(name);
-                        if (group == null) {
-                            p.sendMessage(Values.PREFIX + "Diese Gruppe gibt es nicht!");
-                            return true;
-                        }
+                        new Thread(() -> {
+                            String name = args[2];
+                            LockGroup group = plugin.getProtectionManager().getLockGroups().get(name);
+                            if (group == null) {
+                                p.sendMessage(Values.PREFIX + "Diese Gruppe gibt es nicht!");
+                                Thread.currentThread().interrupt();
+                            }
 
-                        p.sendMessage("§e===========");
-                        p.sendMessage("§eGruppe: §c" + group.getName());
-                        p.sendMessage("§eBesitzer: §c" + Bukkit.getOfflinePlayer(group.getOwner()).getName());
-                        p.sendMessage("§eMitglieder: ");
-                        for (String s : group.getMembers()) {
-                            UUID uuid = UUID.fromString(s);
-                            OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-                            p.sendMessage("§c- " + op.getName());
-                        }
-                        p.sendMessage("§eModeratoren: ");
-                        for (String s : group.getModerators()) {
-                            UUID uuid = UUID.fromString(s);
-                            OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-                            p.sendMessage("§c- " + op.getName());
-                        }
-                        p.sendMessage("§e===========");
+                            p.sendMessage("§e===========");
+                            p.sendMessage("§eGruppe: §c" + group.getName());
+                            p.sendMessage("§eBesitzer: §c" + Bukkit.getOfflinePlayer(group.getOwner()).getName());
+                            p.sendMessage("§eMitglieder: ");
+                            for (String s : group.getMembers()) {
+                                p.sendMessage("§c- " + UUIDFetcher.getName(UUID.fromString(s)));
+                            }
+                            p.sendMessage("§eModeratoren: ");
+                            for (String s : group.getModerators()) {
+                                p.sendMessage("§c- " + UUIDFetcher.getName(UUID.fromString(s)));
+                            }
+                            p.sendMessage("§e===========");
+                        }).start();
 
                     }
 
@@ -330,7 +344,20 @@ public class CMDlock implements CommandExecutor {
 
     private String help() {
 
-        return "§b=====§c/lock§b=====\n" + "§e/lock info §cZeigt Informationen zu der Sicherung an\n" + "§e/lock delete §cLösche eine Sicherung\n" + "§e/lock add <$Gruppe/Spieler> §cFügt einen Spieler oder Gruppe hinzu\n" + "§e/lock remove <$Gruppe/Spieler> §cEntfernt einen Spieler oder Gruppe\n" + "§e/lock group create <Name> §cErstellt eine Gruppe\n" + "§e/lock group add <Spieler> <Gruppe> §cFügt einen Spieler zur Gruppe hinzu\n" + "§e/lock group remove <Spieler> <Gruppe> §cEntfernt einen Spieler von einer Gruppe\n" + "§e/lock group info <Gruppe> §cZeigt Informationen zur Gruppe\n" + "§eMit dem '$' - Zeichen zeigst, du dass es sich bei dem Command um eine Gruppe handlet\n" + "§eDu weißt null worum es hier geht? Hier findest du mehr Informationen: https://forum.ftscraft.de/afglocks";
+        return """
+                §b=====§c/lock§b=====
+                §e/lock info §cZeigt Informationen zu der Sicherung an
+                §e/lock delete §cLösche eine Sicherung
+                §e/lock add <$Gruppe/Spieler> §cFügt einen Spieler oder Gruppe hinzu
+                §e/lock remove <$Gruppe/Spieler> §cEntfernt einen Spieler oder Gruppe
+                §e/lock group create <Name> §cErstellt eine Gruppe
+                §e/lock group add <Spieler> <Gruppe> §cFügt einen Spieler zur Gruppe hinzu
+                §e/lock group remove <Spieler> <Gruppe> §cEntfernt einen Spieler von einer Gruppe
+                §e/lock group info <Gruppe> §cZeigt Informationen zur Gruppe
+                §e/lock group moderator <Spieler> <Gruppe> Fügt einer Gruppe einen Moderator hinzu
+                §e/lock group owner <Spieler> <Gruppe> Ändert den Besitzer einer Gruppe
+                §eMit dem '$' - Zeichen zeigst, du dass es sich bei dem Command um eine Gruppe handlet
+                §eDu weißt null worum es hier geht? Hier findest du mehr Informationen: https://forum.ftscraft.de/afglocks""";
 
     }
 

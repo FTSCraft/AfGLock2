@@ -6,11 +6,8 @@ import de.afgmedia.afglock2.locks.settings.AllowSetting;
 import de.afgmedia.afglock2.locks.settings.DenySetting;
 import de.afgmedia.afglock2.main.AfGLock;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,7 +43,7 @@ public abstract class Protection {
         getAllowSettings().add(setting);
 
         if (saveToFile)
-            saveToFile();
+            save();
     }
 
     /**
@@ -83,7 +80,7 @@ public abstract class Protection {
             allowSetting.setGroup(group);
             addAllowSetting(allowSetting, false);
         }
-        saveToFile();
+        save();
     }
 
     public boolean isAllowedToAccess(UUID uuid) {
@@ -139,52 +136,19 @@ public abstract class Protection {
 
         getAllowSettings().remove(remove);
 
-        saveToFile();
+        save();
 
     }
 
-    public void saveToFile() {
+    public void save() {
 
-        File lockFolder = new File(instance.getDataFolder() + "//locks//");
-
-        File file = new File(lockFolder + "//" + getId() + ".yml");
-        FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-
-        final String w = getLocation().getWorld().getName();
-
-        cfg.set("location.x", getLocation().getX());
-        cfg.set("location.y", getLocation().getY());
-        cfg.set("location.z", getLocation().getZ());
-        cfg.set("location.world", w);
-        cfg.set("owner", getOwner().toString());
-        cfg.set("type", getProtectionType().toString());
-        cfg.set("tier", getProtectionTier());
-        cfg.set("id", getId());
-
-        for (int i = 0; i < getAllowSettings().size(); i++) {
-            AllowSetting allowSetting = getAllowSettings().get(i);
-            cfg.set("allow." + i + ".type", allowSetting.getType().toString());
-            if (allowSetting.getType() == AllowSetting.AllowSettingType.PLAYER) {
-                cfg.set("allow." + i + ".value", allowSetting.getUuid());
-            }
-            if (allowSetting.getType() == AllowSetting.AllowSettingType.GROUP) {
-                cfg.set("allow." + i + ".value", allowSetting.getGroup());
-            }
-        }
-
-        try {
-            cfg.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        AfGLock.getInstance().getDatabaseManager().saveLock(this);
 
     }
 
     public void delete() {
 
-        File lockFolder = new File(instance.getDataFolder() + "//locks//");
-        File file = new File(lockFolder + "//" + getId() + ".yml");
-        file.delete();
+        AfGLock.getInstance().getDatabaseManager().deleteLock(this);
 
     }
 

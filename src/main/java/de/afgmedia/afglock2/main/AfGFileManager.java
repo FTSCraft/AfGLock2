@@ -33,7 +33,7 @@ public class AfGFileManager {
 
         if (instance.getConfig().contains("latestLochkartenId")) {
             latestLochkartenId = instance.getConfig().getInt("latestLochkartenId");
-        } else latestLochkartenId = -1;
+        } else latestLochkartenId = 1;
 
         if (!lockFolder.exists())
             lockFolder.mkdirs();
@@ -46,109 +46,6 @@ public class AfGFileManager {
         instance.saveConfig();
     }
 
-    void loadLocks() {
-        long timeBeginn = System.currentTimeMillis();
-        System.out.println("Lade Locks...");
-        String worldTest = "";
-        try {
-
-            for (File file : Objects.requireNonNull(lockFolder.listFiles())) {
-                FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-
-                long x = cfg.getLong("location.x");
-                long y = cfg.getLong("location.y");
-                long z = cfg.getLong("location.z");
-                String world = cfg.getString("location.world");
-                if (world.equalsIgnoreCase("abbauwelt"))
-                    continue;
-                worldTest = world;
-
-                Location loc = new Location(Bukkit.getWorld(world), x, y, z);
-                /*if(!Utils.isLockable(loc.getBlock().getType())) {
-                    file.delete();
-                    return;
-                }*/
-
-                UUID owner = UUID.fromString(cfg.getString("owner"));
-                ProtectionType type = ProtectionType.valueOf(cfg.getString("type"));
-                int protectionTier = cfg.getInt("tier");
-                int id = cfg.getInt("id");
-
-                List<AllowSetting> allowSettings = new ArrayList<>();
-
-                if (cfg.contains("allow")) {
-                    for (String s : cfg.getConfigurationSection("allow").getKeys(false)) {
-                        AllowSetting.AllowSettingType allowSettingType = AllowSetting.AllowSettingType.valueOf(cfg.getString("allow." + s + ".type"));
-
-                        AllowSetting allowSetting = new AllowSetting(allowSettingType);
-
-                        if (allowSettingType == AllowSetting.AllowSettingType.PLAYER) {
-                            allowSetting.setUuid(cfg.getString("allow." + s + ".value"));
-                        } else {
-                            allowSetting.setGroup(cfg.getString("allow." + s + ".value"));
-                        }
-                        allowSettings.add(allowSetting);
-                    }
-                }
-
-                instance.getProtectionManager().addLock(loc, owner, type, protectionTier, allowSettings, id);
-
-            }
-
-            instance.getProtectionManager().latestIDPlus();
-
-        } catch (NullPointerException ex) {
-            ex.printStackTrace();
-            System.out.println(worldTest);
-        }
-        long time = (System.currentTimeMillis() - timeBeginn);
-        System.out.println("Zeit zum Laden: " + time + " Millisekunden");
-
-    }
-
-    void saveLocks() {
-/*
-
-        for (Protection protection : instance.getProtectionManager().getProtections().values()) {
-
-            try {
-                File file = new File(lockFolder + "//" + protection.getId() + ".yml");
-                FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-
-                final String w = protection.getLocation().getWorld().getName();
-
-                cfg.set("location.x", protection.getLocation().getX());
-                cfg.set("location.y", protection.getLocation().getY());
-                cfg.set("location.z", protection.getLocation().getZ());
-                cfg.set("location.world", w);
-                cfg.set("owner", protection.getOwner().toString());
-                cfg.set("type", protection.getProtectionType().toString());
-                cfg.set("tier", protection.getProtectionTier());
-                cfg.set("id", protection.getId());
-
-                for (int i = 0; i < protection.getAllowSettings().size(); i++) {
-                    AllowSetting allowSetting = protection.getAllowSettings().get(i);
-                    cfg.set("allow." + i + ".type", allowSetting.getType().toString());
-                    if (allowSetting.getType() == AllowSetting.AllowSettingType.PLAYER) {
-                        cfg.set("allow." + i + ".value", allowSetting.getUuid());
-                    }
-                    if (allowSetting.getType() == AllowSetting.AllowSettingType.GROUP) {
-                        cfg.set("allow." + i + ".value", allowSetting.getGroup());
-                    }
-                }
-
-                try {
-                    cfg.save(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-*/
-    }
 
     void saveGroups() {
 
@@ -220,6 +117,7 @@ public class AfGFileManager {
 
         File file = new File(lochkartenFolder + "//lochkarte_" + id + ".yml");
         if (!file.exists()) {
+            System.out.println(file.getAbsolutePath() + " " + id);
             return new Lochkarte(latestLochkartenId++);
         }
 
@@ -232,7 +130,6 @@ public class AfGFileManager {
         for (String players : cfg.getStringList("players")) {
             lochkarte.addPlayer(UUID.fromString(players));
         }
-        lochkarte.setLocktype(cfg.getInt("lockType"));
 
         return lochkarte;
     }
@@ -243,7 +140,6 @@ public class AfGFileManager {
         YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
         cfg.set("groups", lochkarte.getGroups());
-        cfg.set("lockType", lochkarte.getLocktype());
         ArrayList<String> uuidStringList = new ArrayList<>(lochkarte.getUuids().size());
         for (UUID uuid : lochkarte.getUuids()) {
             uuidStringList.add(uuid.toString());

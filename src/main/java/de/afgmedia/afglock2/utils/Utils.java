@@ -24,6 +24,7 @@ import java.util.UUID;
 public class Utils {
 
     private static final Random random = new Random();
+
     public static Location getLeftLocationOfDoubleChest(Block block) {
 
         BlockState blockState = block.getState();
@@ -50,8 +51,7 @@ public class Utils {
         } else {
             if (!door.isOpen()) {
                 lower = block.getLocation().subtract(0, 1, 0);
-                if (isDoor(lower.getBlock().getType()))
-                    return lower;
+                if (isDoor(lower.getBlock().getType())) return lower;
                 else return block.getLocation();
             }
             lower = block.getLocation();
@@ -72,19 +72,18 @@ public class Utils {
 
     public static int getOneOrTwo() {
 
-        if (random.nextBoolean())
-            return 1;
+        if (random.nextBoolean()) return 1;
         else return 2;
 
     }
 
     public static boolean isLock(String string) {
-        return string.equalsIgnoreCase(Values.SCHLOSS_DIAMOND_NAME) || string.equalsIgnoreCase(Values.SCHLOSS_EMERALD_NAME) || string.equalsIgnoreCase(Values.SCHLOSS_IRON_NAME) || string.equalsIgnoreCase(Values.SCHLOSS_STEIN_NAME);
+        return string.endsWith("_LOCK");
     }
 
     public static boolean isLockable(Material material) {
 
-        return material == Material.CHEST || isDoor(material) || isTrapDoor(material) || material == Material.TRAPPED_CHEST || isFenceGate(material) || isBarrel(material) || material == Material.NOTE_BLOCK || material == Material.LECTERN;
+        return material == Material.CHEST || isDoor(material) || isTrapDoor(material) || material == Material.TRAPPED_CHEST || isFenceGate(material) || isBarrel(material) || material == Material.NOTE_BLOCK || material == Material.CHISELED_BOOKSHELF || material == Material.LECTERN;
 
     }
 
@@ -111,7 +110,6 @@ public class Utils {
     public static boolean isBarrel(Material material) {
         return material == Material.BARREL;
     }
-
 
 
 }

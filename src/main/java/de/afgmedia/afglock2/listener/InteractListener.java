@@ -26,9 +26,6 @@ public class InteractListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        Player p = event.getPlayer();
-        Block block = event.getClickedBlock();
-
         plugin.getProtectionManager().handleInteractEvent(event);
     }
 

@@ -9,6 +9,7 @@ public enum ProtectionType {
     GATE,
     BARREL,
     NOTE_BLOCK,
-    LECTERN
+    LECTERN,
+    BOOKSHELF
 
 }
