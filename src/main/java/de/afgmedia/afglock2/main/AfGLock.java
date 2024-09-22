@@ -7,14 +7,13 @@ import de.afgmedia.afglock2.items.ItemStacks;
 import de.afgmedia.afglock2.listener.BlockBreakListener;
 import de.afgmedia.afglock2.listener.CraftingListener;
 import de.afgmedia.afglock2.listener.InteractListener;
-import de.afgmedia.afglock2.listener.InventoryClickListener;
 import de.afgmedia.afglock2.locks.manager.ProtectionManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
 
-public class AfGLock extends JavaPlugin implements Listener {
+public class AfGLock extends JavaPlugin {
 
     private ProtectionManager protectionManager;
     private AfGFileManager fileManager;
@@ -41,7 +40,6 @@ public class AfGLock extends JavaPlugin implements Listener {
         protectionManager = new ProtectionManager(this);
 
         new InteractListener(this);
-        new InventoryClickListener(this);
         new BlockBreakListener(this);
         new CraftingListener(this);
 

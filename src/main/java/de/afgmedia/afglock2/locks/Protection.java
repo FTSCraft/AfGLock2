@@ -7,28 +7,40 @@ import de.afgmedia.afglock2.locks.settings.DenySetting;
 import de.afgmedia.afglock2.main.AfGLock;
 import org.bukkit.Location;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class Protection {
+public class Protection {
 
-    abstract public int getId();
+    private final int id;
 
-    abstract public UUID getOwner();
+    private final UUID owner;
 
-    abstract public Location getLocation();
+    private final Location location;
 
-    abstract public ProtectionType getProtectionType();
+    private final ProtectionType type;
 
-    abstract public List<AllowSetting> getAllowSettings();
+    private final List<AllowSetting> allowSettings;
 
-    abstract public int getProtectionTier();
+    private final ProtectionTier tier;
 
-    private final AfGLock instance;
+    public Protection(int id, UUID owner, Location location, ProtectionType type, ProtectionTier tier) {
+        this.id = id;
+        this.owner = owner;
+        this.location = location;
+        this.type = type;
+        this.allowSettings = new ArrayList<>();
+        this.tier = tier;
+    }
 
-    public Protection(AfGLock instance) {
-        this.instance = instance;
+    public Protection(int id, UUID owner, Location location, ProtectionType type, ProtectionTier tier, List<AllowSetting> allowSettings) {
+        this.id = id;
+        this.owner = owner;
+        this.location = location;
+        this.type = type;
+        this.allowSettings = allowSettings;
+        this.tier = tier;
     }
 
     public void addAllowSetting(AllowSetting setting) {
@@ -36,38 +48,27 @@ public abstract class Protection {
     }
 
     public void addAllowSetting(AllowSetting setting, boolean saveToFile) {
-
         if (checkForDuplicates(setting))
             return;
-
         getAllowSettings().add(setting);
-
         if (saveToFile)
             save();
     }
 
-    /**
-     * Checks for duplicated AllowSettings
-     * @param allowSetting - AllowSetting to check if it's already in
-     * @return true when AllowSetting is a duplicate, otherwise false
-     */
     private boolean checkForDuplicates(AllowSetting allowSetting) {
-
         for (AllowSetting setting : getAllowSettings()) {
             if (setting.getType() == allowSetting.getType()) {
-                if(setting.getType() == AllowSetting.AllowSettingType.PLAYER) {
-                    if(setting.getUuid().equals(allowSetting.getUuid()))
+                if (setting.getType() == AllowSetting.AllowSettingType.PLAYER) {
+                    if (setting.getUuid().equals(allowSetting.getUuid()))
                         return true;
-                } else {
-                    if(setting.getGroup().equals(allowSetting.getGroup()))
-                        return true;
+                    continue;
                 }
+                if (setting.getGroup().equals(allowSetting.getGroup()))
+                    return true;
             }
         }
-
         return false;
     }
-
 
     public void applyLochkarte(Lochkarte lochkarte) {
         for (UUID uuid : lochkarte.getUuids()) {
@@ -86,13 +87,14 @@ public abstract class Protection {
     public boolean isAllowedToAccess(UUID uuid) {
         if (getOwner().toString().equalsIgnoreCase(uuid.toString()))
             return true;
-
         for (AllowSetting setting : getAllowSettings()) {
             if (setting.getType() == AllowSetting.AllowSettingType.PLAYER) {
                 if (setting.getUuid().equalsIgnoreCase(uuid.toString()))
                     return true;
-            } else if (setting.getType() == AllowSetting.AllowSettingType.GROUP) {
-                LockGroup group = instance.getProtectionManager().getLockGroups().get(setting.getGroup());
+                continue;
+            }
+            if (setting.getType() == AllowSetting.AllowSettingType.GROUP) {
+                LockGroup group = AfGLock.getInstance().getProtectionManager().getLockGroups().get(setting.getGroup());
                 if (group.isMember(uuid))
                     return true;
             }
@@ -105,51 +107,54 @@ public abstract class Protection {
     }
 
     public void removeAllowSetting(DenySetting denySetting) {
-
         AllowSetting remove = null;
-
         for (AllowSetting setting : getAllowSettings()) {
-
             if (denySetting.getType() == AllowSetting.AllowSettingType.PLAYER) {
-                if (setting.getType() == AllowSetting.AllowSettingType.PLAYER) {
-
-                    if (setting.getUuid().equalsIgnoreCase(denySetting.getUuid())) {
+                if (setting.getType() == AllowSetting.AllowSettingType.PLAYER)
+                    if (setting.getUuid().equalsIgnoreCase(denySetting.getUuid()))
                         remove = setting;
-                    }
-
-                }
-            } else if (denySetting.getType() == AllowSetting.AllowSettingType.GROUP) {
-                if (setting.getType() == AllowSetting.AllowSettingType.GROUP) {
-
-                    if (setting.getGroup().equalsIgnoreCase(denySetting.getGroup())) {
-                        remove = setting;
-                    }
-
-                }
-
+                continue;
             }
-
+            if (denySetting.getType() == AllowSetting.AllowSettingType.GROUP &&
+                    setting.getType() == AllowSetting.AllowSettingType.GROUP)
+                if (setting.getGroup().equalsIgnoreCase(denySetting.getGroup()))
+                    remove = setting;
         }
-
         if (remove == null)
             return;
-
         getAllowSettings().remove(remove);
-
         save();
-
     }
 
     public void save() {
-
         AfGLock.getInstance().getDatabaseManager().saveLock(this);
-
     }
 
     public void delete() {
-
         AfGLock.getInstance().getDatabaseManager().deleteLock(this);
-
     }
 
+    public int getId() {
+        return this.id;
+    }
+
+    public UUID getOwner() {
+        return this.owner;
+    }
+
+    public Location getLocation() {
+        return this.location;
+    }
+
+    public ProtectionType getProtectionType() {
+        return this.type;
+    }
+
+    public List<AllowSetting> getAllowSettings() {
+        return this.allowSettings;
+    }
+
+    public ProtectionTier getProtectionTier() {
+        return this.tier;
+    }
 }

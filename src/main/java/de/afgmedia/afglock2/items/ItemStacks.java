@@ -3,15 +3,13 @@ package de.afgmedia.afglock2.items;
 import de.afgmedia.afglock2.main.AfGLock;
 import de.afgmedia.afglock2.utils.Values;
 import de.ftscraft.ftsutils.items.ItemBuilder;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-
-import java.util.Arrays;
+import org.bukkit.plugin.Plugin;
 
 public class ItemStacks {
 
@@ -24,8 +22,6 @@ public class ItemStacks {
     private final ItemStack lochkarte;
 
     private final AfGLock instance;
-
-    public static NamespacedKey nameSpacedKeyId = null, nameSpacedKeyItem = null;
 
     public ItemStacks(AfGLock plugin) {
         this.instance = plugin;
@@ -81,7 +77,6 @@ public class ItemStacks {
         ShapedRecipe steinR = new ShapedRecipe(steinK, schloss_stein);
 
         steinR.shape("SAS", "AAA", "SAS");
-        steinR.setIngredient('A', Material.AIR);
         steinR.setIngredient('S', Material.COBBLESTONE);
 
         //Dietrich
@@ -89,7 +84,6 @@ public class ItemStacks {
         ShapedRecipe dietrichR = new ShapedRecipe(dietrichK, dietrich);
 
         dietrichR.shape("EAA", "CCC", "AAD");
-        dietrichR.setIngredient('A', Material.AIR);
         dietrichR.setIngredient('E', Material.EMERALD);
         dietrichR.setIngredient('C', Material.CHAIN);
         dietrichR.setIngredient('D', Material.DIAMOND);

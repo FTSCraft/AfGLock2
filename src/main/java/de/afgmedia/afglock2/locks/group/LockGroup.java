@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.UUID;
 
 public class LockGroup {
-
     private final String name;
+
     private final List<String> members;
+
     private final List<String> moderators;
+
     private UUID owner;
 
     public LockGroup(String name, UUID owner) {
@@ -19,11 +21,11 @@ public class LockGroup {
     }
 
     public void addMember(UUID uuid) {
-        members.add(uuid.toString());
+        this.members.add(uuid.toString());
     }
 
     public void removeMember(UUID uuid) {
-        members.remove(uuid.toString());
+        this.members.remove(uuid.toString());
     }
 
     public void addModerator(UUID uuid) {
@@ -31,39 +33,35 @@ public class LockGroup {
     }
 
     private void addModerator(String uuid) {
-        moderators.add(uuid);
+        this.moderators.add(uuid);
     }
 
     public void removeModerator(UUID uuid) {
-        moderators.remove(uuid.toString());
+        this.moderators.remove(uuid.toString());
     }
 
-    /**
-     * @apiNote Only use for listing the members!
-     */
     public List<String> getModerators() {
-        return moderators;
+        return this.moderators;
     }
 
     public boolean isModerator(UUID uuid) {
-        return moderators.contains(uuid.toString());
+        return this.moderators.contains(uuid.toString());
     }
 
-
     public boolean isMember(UUID uuid) {
-        return members.contains(uuid.toString()) || owner.toString().equalsIgnoreCase(uuid.toString());
+        return (this.members.contains(uuid.toString()) || this.owner.toString().equalsIgnoreCase(uuid.toString()));
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public List<String> getMembers() {
-        return members;
+        return this.members;
     }
 
     public UUID getOwner() {
-        return owner;
+        return this.owner;
     }
 
     public void setOwner(UUID owner) {

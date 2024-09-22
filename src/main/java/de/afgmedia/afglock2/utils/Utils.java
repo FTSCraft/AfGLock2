@@ -1,34 +1,24 @@
 package de.afgmedia.afglock2.utils;
 
-import de.afgmedia.afglock2.main.AfGLock;
+import java.util.Random;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.type.Door;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.DoubleChestInventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
-
-import java.util.Random;
-import java.util.UUID;
 
 public class Utils {
-
     private static final Random random = new Random();
 
     public static Location getLeftLocationOfDoubleChest(Block block) {
-
         BlockState blockState = block.getState();
-
         if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST) {
             Chest chest = (Chest) blockState;
             if (chest.getInventory() instanceof DoubleChestInventory) {
@@ -40,12 +30,10 @@ public class Utils {
     }
 
     public static Location getLowerLocationOfDoor(Block block) {
-        if (!isDoor(block.getType())) {
-            return null;
-        }
-
-        Door door = ((Door) block.getBlockData());
         Location lower;
+        if (!isDoor(block.getType()))
+            return null;
+        Door door = (Door) block.getBlockData();
         if (door.getHalf() == Bisected.Half.TOP) {
             lower = block.getLocation().subtract(0, 1, 0);
         } else {
@@ -57,24 +45,15 @@ public class Utils {
             lower = block.getLocation();
         }
         return lower;
-
     }
 
     public static boolean isDoubleChest(Block block) {
         BlockState blockState = block.getState();
-
         if (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST) {
             Chest chest = (Chest) blockState;
             return chest.getInventory() instanceof DoubleChestInventory;
         }
         return false;
-    }
-
-    public static int getOneOrTwo() {
-
-        if (random.nextBoolean()) return 1;
-        else return 2;
-
     }
 
     public static boolean isLock(String string) {
@@ -110,6 +89,4 @@ public class Utils {
     public static boolean isBarrel(Material material) {
         return material == Material.BARREL;
     }
-
-
 }

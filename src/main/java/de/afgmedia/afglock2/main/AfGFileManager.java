@@ -1,14 +1,7 @@
 package de.afgmedia.afglock2.main;
 
-import de.afgmedia.afglock2.locks.ProtectionType;
 import de.afgmedia.afglock2.locks.group.LockGroup;
 import de.afgmedia.afglock2.locks.lochkarte.Lochkarte;
-import de.afgmedia.afglock2.locks.settings.AllowSetting;
-import de.afgmedia.afglock2.main.AfGLock;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +10,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class AfGFileManager {
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+public class AfGFileManager {
     private final File lockFolder;
     private final File groupFolder;
     private final File lochkartenFolder;
@@ -30,7 +25,6 @@ public class AfGFileManager {
         this.lockFolder = new File(instance.getDataFolder() + "//locks//");
         this.groupFolder = new File(instance.getDataFolder() + "//groups");
         this.lochkartenFolder = new File(instance.getDataFolder() + "//lochkarten");
-
         if (instance.getConfig().contains("latestLochkartenId")) {
             latestLochkartenId = instance.getConfig().getInt("latestLochkartenId");
         } else latestLochkartenId = 1;
@@ -45,7 +39,6 @@ public class AfGFileManager {
         instance.getConfig().set("latestLochkartenId", latestLochkartenId);
         instance.saveConfig();
     }
-
 
     void saveGroups() {
 
@@ -64,7 +57,6 @@ public class AfGFileManager {
                 e.printStackTrace();
             }
         }
-
     }
 
     void loadGroups() {
@@ -86,24 +78,18 @@ public class AfGFileManager {
                     LockGroup group = new LockGroup(name, owner);
 
                     if (cfg.contains("moderators")) {
-
                         List<String> mods = (List<String>) cfg.getList("moderators");
-
                         for (String mod : mods) {
                             group.addModerator(UUID.fromString(mod));
                         }
-
                     }
-
 
                     for (String member : members) {
                         group.addMember(UUID.fromString(member));
                     }
 
-
                     instance.getProtectionManager().getLockGroups().put(name, group);
                 } catch (Exception e) {
-
                     e.printStackTrace();
                 }
             }
@@ -120,17 +106,12 @@ public class AfGFileManager {
             System.out.println(file.getAbsolutePath() + " " + id);
             return new Lochkarte(latestLochkartenId++);
         }
-
         YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-
         Lochkarte lochkarte = new Lochkarte(id);
-        for (String group : cfg.getStringList("groups")) {
+        for (String group : cfg.getStringList("groups"))
             lochkarte.addGroup(group);
-        }
-        for (String players : cfg.getStringList("players")) {
+        for (String players : cfg.getStringList("players"))
             lochkarte.addPlayer(UUID.fromString(players));
-        }
-
         return lochkarte;
     }
 
@@ -138,20 +119,15 @@ public class AfGFileManager {
         int id = lochkarte.getId();
         File file = new File(lochkartenFolder + "//lochkarte_" + id + ".yml");
         YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-
         cfg.set("groups", lochkarte.getGroups());
         ArrayList<String> uuidStringList = new ArrayList<>(lochkarte.getUuids().size());
-        for (UUID uuid : lochkarte.getUuids()) {
+        for (UUID uuid : lochkarte.getUuids())
             uuidStringList.add(uuid.toString());
-        }
         cfg.set("players", uuidStringList);
-
         try {
             cfg.save(file);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 }
