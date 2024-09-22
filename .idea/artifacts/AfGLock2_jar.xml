@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="AfGLock2:jar">
-    <output-path>$PROJECT_DIR$/../../FTSCraft/Server/plugins</output-path>
-    <root id="archive" name="AfGLock2.jar">
-      <element id="module-output" name="AfGLock2" />
-    </root>
-  </artifact>
-</component>
