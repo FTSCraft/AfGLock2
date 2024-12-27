@@ -85,7 +85,7 @@ public class ItemStacks {
 
         dietrichR.shape("EAA", "CCC", "AAD");
         dietrichR.setIngredient('E', Material.EMERALD);
-        dietrichR.setIngredient('C', Material.CHAIN);
+        dietrichR.setIngredient('C', Material.IRON_INGOT);
         dietrichR.setIngredient('D', Material.DIAMOND);
 
         NamespacedKey lochkarteK = new NamespacedKey(instance, "AFGLOCK-LOCHKARTE");
