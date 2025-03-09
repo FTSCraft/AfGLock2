@@ -2,7 +2,7 @@ name: AfGLock
 version: ${project.version}
 author: halberfan | AfGMedia
 main: de.afgmedia.afglock2.main.AfGLock
-api-version: 1.19
+api-version: 1.21
 load: POSTWORLD
 depend:
     - FTSUtils
