@@ -2,10 +2,10 @@ package de.afgmedia.afglock2.locks;
 
 public enum ProtectionTier {
     STONE(1.0F),
-    COPPER(0.25F),
-    IRON(0.2F),
-    DIAMOND(0.1F),
-    EMERALD(0.05F);
+    COPPER(0.5F),
+    IRON(0.25F),
+    DIAMOND(0.2F),
+    EMERALD(0.15F);
 
     private final float chance;
 
