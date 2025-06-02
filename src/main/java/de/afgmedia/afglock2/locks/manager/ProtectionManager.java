@@ -15,7 +15,7 @@ import de.ftscraft.ftsutils.uuidfetcher.UUIDFetcher;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
+
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -23,13 +23,11 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 
 public class ProtectionManager {
     private final AfGLock instance;
@@ -128,7 +126,7 @@ public class ProtectionManager {
                     return;
                 }
 
-                new Thread(() -> {
+                Bukkit.getScheduler().runTaskAsynchronously(instance, () ->{
                     p.sendMessage("§e========");
                     p.sendMessage("§eBesitzer: §c" + Bukkit.getOfflinePlayer(protection.getOwner()).getName());
                     p.sendMessage("§eSicherungslevel: §c" + protection.getProtectionTier());
@@ -144,7 +142,7 @@ public class ProtectionManager {
                         if (setting.getType() == AllowSetting.AllowSettingType.PLAYER)
                             p.sendMessage("§c- " + UUIDFetcher.getName(UUID.fromString(setting.getUuid())));
                     }
-                }).start();
+                });
 
             } else if (ps instanceof AllowSetting allowSetting) {
 
@@ -273,6 +271,9 @@ public class ProtectionManager {
             return;
         }
         if (!protection.isAllowedToAccess(p.getUniqueId())) {
+            if (protection.getProtectionType() == ProtectionType.LECTERN) {
+                return;
+            }
             if (p.hasPermission("ftslock.openlock")) {
                 p.sendMessage(Values.PREFIX + "Du hast diese Sicherung von §c" + Utils.getName(protection.getOwner()) + " §7mit deinen Rechten geöffnet!");
                 event.setCancelled(false);

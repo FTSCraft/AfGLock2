@@ -21,5 +21,6 @@ public class Values {
 
     public static final int LOCHKARTE_GROUP_LIMIT = 5;
 
-    public static final String PREFIX = "§7[§5AFG-Lock§7] ";
+    public static final String PREFIX = "§7[§5AFG-Lock§7] ",
+    MM_PREFIX = "<gray>[<dark_purple>AFG-Lock</dark_purple>] ";
 }
