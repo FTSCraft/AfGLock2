@@ -4,10 +4,7 @@ import de.afgmedia.afglock2.commands.CMDlock;
 import de.afgmedia.afglock2.commands.TabLock;
 import de.afgmedia.afglock2.database.DatabaseManager;
 import de.afgmedia.afglock2.items.ItemStacks;
-import de.afgmedia.afglock2.listener.BlockBreakListener;
-import de.afgmedia.afglock2.listener.CraftingListener;
-import de.afgmedia.afglock2.listener.InteractListener;
-import de.afgmedia.afglock2.listener.WindchargeListener;
+import de.afgmedia.afglock2.listener.*;
 import de.afgmedia.afglock2.locks.manager.ProtectionManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,6 +38,7 @@ public class AfGLock extends JavaPlugin {
         new BlockBreakListener(this);
         new CraftingListener(this);
         new WindchargeListener(this);
+        new LecternListener(this);
 
         new ItemStacks(this);
 
