@@ -5,20 +5,18 @@ import de.ftscraft.ftsutils.items.ItemReader;
 import de.ftscraft.ftsutils.misc.MiniMsg;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 public class CraftingListener implements Listener {
-    private final AfGLock instance;
 
     public CraftingListener(AfGLock instance) {
-        this.instance = instance;
-        this.instance.getServer().getPluginManager().registerEvents(this, (Plugin) instance);
+        instance.getServer().getPluginManager().registerEvents(this, instance);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onCraft(CraftItemEvent event) {
         ItemStack result = event.getInventory().getResult();
         if (result == null)
@@ -30,4 +28,5 @@ public class CraftingListener implements Listener {
             MiniMsg.msg((Player) event.getWhoClicked(), "<blue>Das dürfen nur Räuber.</blue>");
         }
     }
+
 }
