@@ -8,19 +8,18 @@ import de.afgmedia.afglock2.locks.group.LockGroup;
 import de.afgmedia.afglock2.locks.lochkarte.Lochkarte;
 import de.afgmedia.afglock2.locks.settings.*;
 import de.afgmedia.afglock2.main.AfGLock;
+import de.afgmedia.afglock2.utils.LockBreakNotifier;
 import de.afgmedia.afglock2.utils.Utils;
 import de.afgmedia.afglock2.utils.Values;
 import de.ftscraft.ftsutils.items.ItemReader;
 import de.ftscraft.ftsutils.uuidfetcher.UUIDFetcher;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -32,8 +31,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class ProtectionManager {
     private final AfGLock instance;
 
-    private int latestID = 0;
-
     private final HashMap<Location, Protection> protections = new HashMap<>();
 
     private final HashMap<Player, ProtectionSetting> playerSetting = new HashMap<>();
@@ -42,16 +39,19 @@ public class ProtectionManager {
 
     private final HashMap<Integer, Lochkarte> lochkartenCache = new HashMap<>();
 
+    private final LockBreakNotifier lockBreakNotifier;
+
     public ProtectionManager(AfGLock instance) {
         this.instance = instance;
+        this.lockBreakNotifier = new LockBreakNotifier(instance);
     }
 
-    public ReturnType createLock(Block block, Player player, ProtectionTier protectionTier) {
+    public void createLock(Block block, Player player, ProtectionTier protectionTier) {
         ProtectionType type;
         Material material = block.getType();
         Location location = block.getLocation();
         if (!Utils.isLockable(material))
-            return ReturnType.NOT_LOCKABLE;
+            return;
         if (material == Material.CHEST || material == Material.TRAPPED_CHEST) {
             if (Utils.isDoubleChest(block)) {
                 type = ProtectionType.DOUBLE_CHEST;
@@ -73,7 +73,7 @@ public class ProtectionManager {
         } else if (material == Material.CHISELED_BOOKSHELF) {
             type = ProtectionType.BOOKSHELF;
         } else {
-            return ReturnType.FAIL;
+            return;
         }
         if (type == ProtectionType.DOUBLE_CHEST) {
             location = Utils.getLeftLocationOfDoubleChest(block);
@@ -81,12 +81,11 @@ public class ProtectionManager {
             location = Utils.getLowerLocationOfDoor(block);
         }
         if (this.protections.get(location) != null)
-            return ReturnType.ALREADY_LOCKED;
+            return;
         if (!ChestShop.canAccess(player, block))
-            return ReturnType.ALREADY_LOCKED;
+            return;
         Protection protection = this.instance.getDatabaseManager().createLock(player.getUniqueId(), location, type, protectionTier);
         this.protections.put(location, protection);
-        return ReturnType.DONE;
     }
 
     public Protection getByBlock(Block block) {
@@ -104,7 +103,7 @@ public class ProtectionManager {
 
     public void handleInteractEvent(PlayerInteractEvent event) {
         Player p = event.getPlayer();
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock() == null)
             return;
         Block block = event.getClickedBlock();
         if (!ChestShop.canAccess(p, block)) {
@@ -284,7 +283,7 @@ public class ProtectionManager {
             ItemMeta itemMeta = itemStack.getItemMeta();
             if (itemMeta != null) {
                 String sign = ItemReader.getSign(itemMeta);
-                if (sign.equals("DIETRICH") && p.hasPermission("afglock.dietrich")) {
+                if ("DIETRICH".equals(sign) && p.hasPermission("afglock.dietrich")) {
                     startLockPicking(protection, p);
                     return;
                 }
@@ -313,7 +312,7 @@ public class ProtectionManager {
     }
 
     private void success(Player p, Protection protection) {
-        instance.getProtectionManager().removeLock(protection);
+        removeLock(protection);
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             p.closeInventory();
             if (protection.getProtectionTier() != ProtectionTier.STONE)
@@ -321,12 +320,8 @@ public class ProtectionManager {
         }, 2);
         p.sendMessage(Values.PREFIX + "Du hast es geschafft! Die Sicherung ist in seine Einzelteile zersprungen.");
         p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_USE, 100, 50);
-        OfflinePlayer op = Bukkit.getOfflinePlayer(protection.getOwner());
-        if (op.isOnline())
-            op.getPlayer().sendMessage(Values.PREFIX + "Ein Sloss von dir wurde geknackt! (" + protection.getLocation().getX() + " " + protection.getLocation().getY() + " " + protection.getLocation().getZ() + ")");
-        else
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "mail " + op.getName() + " Ein Sloss von dir wurde geknackt! (" + protection.getLocation().getX() + " " + protection.getLocation().getY() + " " + protection.getLocation().getZ() + ")");
 
+        lockBreakNotifier.notifyLockBreak(protection.getLocation(), protection.getOwner());
     }
 
     private void fail(Player p) {
@@ -347,44 +342,30 @@ public class ProtectionManager {
         protection.delete();
     }
 
-    public Protection addLock(Location loc, UUID owner, ProtectionType type, ProtectionTier protectionTier, List<AllowSetting> allowSettings, int id) {
-        Protection protection = new Protection(id, owner, loc, type, protectionTier);
-        for (AllowSetting allowSetting : allowSettings)
-            protection.addAllowSetting(allowSetting);
-        if (this.latestID < id)
-            this.latestID = id;
-        this.protections.put(loc, protection);
-        return protection;
-    }
-
     public boolean isLocked(Block block) {
         return (getByBlock(block) != null);
-    }
-
-    public enum ReturnType {
-        DONE, NOT_LOCKABLE, ALREADY_LOCKED, FAIL
     }
 
     public void setProtectionSetting(Player player, ProtectionSetting protectionSetting) {
         playerSetting.put(player, protectionSetting);
     }
 
-    public boolean isInSetting(Player player) {
-        return this.playerSetting.containsKey(player);
-    }
-
     public Lochkarte getLochkarte(int id) {
-        if (!this.lochkartenCache.containsKey(Integer.valueOf(id))) {
+        if (!this.lochkartenCache.containsKey(id)) {
             System.out.println("Cache " + this.lochkartenCache.keySet());
             Lochkarte lochkarte = this.instance.getFileManager().loadLochkarte(id);
-            this.lochkartenCache.put(Integer.valueOf(lochkarte.getId()), lochkarte);
+            this.lochkartenCache.put(lochkarte.getId(), lochkarte);
             return lochkarte;
         }
-        return this.lochkartenCache.get(Integer.valueOf(id));
+        return this.lochkartenCache.get(id);
     }
 
     public void saveLochkartenFromCache() {
         for (Lochkarte value : this.lochkartenCache.values())
             this.instance.getFileManager().saveLochkarte(value);
+    }
+
+    public LockBreakNotifier getLockBreakNotifier() {
+        return lockBreakNotifier;
     }
 }

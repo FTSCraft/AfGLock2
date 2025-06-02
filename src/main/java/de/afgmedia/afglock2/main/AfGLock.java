@@ -27,6 +27,7 @@ public class AfGLock extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        protectionManager.getLockBreakNotifier().runThroughAllNotifies();
         protectionManager.saveLochkartenFromCache();
         fileManager.saveGroups();
         fileManager.saveConfig();
