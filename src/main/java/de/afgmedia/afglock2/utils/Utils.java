@@ -1,6 +1,5 @@
 package de.afgmedia.afglock2.utils;
 
-import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -15,7 +14,6 @@ import org.bukkit.block.data.type.Door;
 import org.bukkit.inventory.DoubleChestInventory;
 
 public class Utils {
-    private static final Random random = new Random();
 
     public static Location getLeftLocationOfDoubleChest(Block block) {
         BlockState blockState = block.getState();
@@ -32,7 +30,7 @@ public class Utils {
     public static Location getLowerLocationOfDoor(Block block) {
         Location lower;
         if (!isDoor(block.getType()))
-            return null;
+            throw new IllegalArgumentException("given block is no door " + block.getLocation());
         Door door = (Door) block.getBlockData();
         if (door.getHalf() == Bisected.Half.TOP) {
             lower = block.getLocation().subtract(0, 1, 0);
@@ -80,10 +78,6 @@ public class Utils {
 
     public static String getName(UUID uuid) {
         return Bukkit.getOfflinePlayer(uuid).getName();
-    }
-
-    public static UUID getUUID(String name) {
-        return Bukkit.getOfflinePlayer(name).getUniqueId();
     }
 
     public static boolean isBarrel(Material material) {
